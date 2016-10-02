@@ -1,5 +1,7 @@
-cards.txt
-pm_test.txt
-pm_train.txt
+# cards.txt
+# pm_test.txt
+# pm_train.txt
+*.txt
 node_modules
-
+package.json
+filter.js
