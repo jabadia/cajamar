@@ -1,0 +1,22 @@
+{
+  "name": "crossfilter",
+  "authors": [
+    "Javier Abadía <javi.abadia@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "dcjs": "^1.7.5",
+    "leaflet": "^1.0.1",
+    "angular": "^1.5.8"
+  }
+}
