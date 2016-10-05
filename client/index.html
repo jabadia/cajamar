@@ -6,18 +6,49 @@
     <link rel="stylesheet" type="text/css" href="bower_components/dcjs/dc.css">
     <link rel="stylesheet" type="text/css" href="bower_components/leaflet/dist/leaflet.css">
     <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="style.css">
+	<link rel="stylesheet" type="text/css" href="3rd_party/calendar-heatmap/src/calendar-heatmap.js">
+	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body ng-app="app" ng-controller="MainCtrl">
 	<div class="container-fluid">
 		<div class="row">
-			<div class="col-xs-12 dc-data-count dc-chart" id="data-count">
-				<h2>Almería</h2>
-			</div>
+			<h2 class="col-xs-12">Almería</h2>
 		</div>
-	</div>	
+		<div class="row">
+			<div class="main-map"></div>
+			<div class="sector-chart"></div>
+			<div class="month-chart"></div>
+			<div class="dayofweek-chart"></div>
+			<div class="timeofday-chart"></div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 calendar"></div>
+		</div>
+	</div>
 
-	<script src="bower_components/angular/angular.min.js"></script>
+	<div class="weather">
+		<i class="meteo-icon clear-day"></i>
+		<i class="meteo-icon partly-cloudy-day"></i>
+		<i class="meteo-icon partly-cloudy-night"></i>
+		<i class="meteo-icon wind"></i>
+		<i class="meteo-icon cloudy"></i>
+		<i class="meteo-icon fog"></i>
+		<i class="meteo-icon rain"></i>
+	</div>
+
+	<div class="credits">
+		<h1>mentions</h1>
+		<a href="https://darksky.net/">Meteo data from Dark Sky</a>
+		<a href="http://www.alessioatzeni.com/meteocons/">Meteo icons: Alessio Atenzi</a>
+	</div>
+
+	<script src="bower_components/moment/moment.js"></script>
+	<script src="bower_components/d3/d3.js"></script>
+	<script src="bower_components/crossfilter/crossfilter.js"></script>
+	<script src="bower_components/dcjs/dc.js"></script>
+	<script src="bower_components/lodash/dist/lodash.js"></script>
+	<script src="bower_components/angular/angular.js"></script>
+	<script src="3rd_party/calendar-heatmap/src/calendar-heatmap.js"></script>
 	<script src="app.js"></script>
 </body>
 </html>

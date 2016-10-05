@@ -1,0 +1,41 @@
+@font-face {
+    font-family: 'MeteoconsRegular';
+    src: url('./3rd_party/meteocons-font/FONT/Font-face/meteocons-webfont.eot');
+    src: url('./3rd_party/meteocons-font/FONT/Font-face/meteocons-webfont.eot?#iefix') format('embedded-opentype'),
+         url('./3rd_party/meteocons-font/FONT/Font-face/meteocons-webfont.woff') format('woff'),
+         url('./3rd_party/meteocons-font/FONT/Font-face/meteocons-webfont.ttf') format('truetype'),
+         url('./3rd_party/meteocons-font/FONT/Font-face/meteocons-webfont.svg#MeteoconsRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.meteo-icon
+{
+    font-family: "MeteoconsRegular";
+    font-style: normal;
+    font-size: 30px;
+}
+
+/* http://www.alessioatzeni.com/meteocons/ */
+
+.meteo-icon.clear-day:before {
+    content: 'B';
+}
+.meteo-icon.partly-cloudy-day:before {
+    content: 'H';
+}
+.meteo-icon.partly-cloudy-night:before {
+    content: 'I';
+}
+.meteo-icon.wind:before {
+    content: 'F';
+}
+.meteo-icon.cloudy:before {
+    content: 'N';
+}
+.meteo-icon.fog:before {
+    content: 'M';
+}
+.meteo-icon.rain:before {
+    content: 'R';
+}

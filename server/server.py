@@ -56,14 +56,19 @@ def send_static(path):
     return send_from_directory('../client', path)
 
 
-@app.route('/query_csv')
+@app.route('/api/cards/')
 def query_csv():
     # aqui se pueden filtrar o procesar los datos antes de devolverlos
     sector = request.args.get('sector') or 'MODA Y COMPLEMENTOS'
-    result = data if sector == '*' else data[data['SECTOR']== sector] 
-    result = result[0:100]
+    result = data if sector == '*' else data[data['SECTOR']== sector]
+    result = result.sample(10000) # muestra aleatoria, para ir más rápido
     return result.to_csv(index=False, sep='|', float_format="%.2f")
 
+
+@app.route('/api/sectores/')
+def sectores():
+    sectores = sorted(data['SECTOR'].unique().tolist())
+    return json.dumps(sectores)
 
 if __name__ == "__main__":
     init()

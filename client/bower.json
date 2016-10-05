@@ -15,8 +15,9 @@
     "tests"
   ],
   "dependencies": {
-    "dcjs": "^1.7.5",
     "leaflet": "^1.0.1",
-    "angular": "^1.5.8"
+    "angular": "^1.5.8",
+    "lodash": "^4.16.3",
+    "dcjs": "2"
   }
 }
