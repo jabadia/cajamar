@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import json
 from datetime import datetime
 import time
 
@@ -12,14 +13,22 @@ from flask import Flask, redirect, request, send_from_directory, make_response
 # globals
 app = Flask(__name__)
 data = None
+weather = None
 
 def init():
-    global data
+    global data, weather
+
+    # # read weather
+    weatherfile = '../data/weather_simplified.csv'
+    #
+    print "reading weather"
+    weather = pandas.read_csv(weatherfile, sep='|', header=0, parse_dates=['day']).sort_values(by='day');
+
     datafile = '../data/cards.txt'
     # fichero cards.txt recortado para desarrollar con más agilidad
     # $ head -300 cards.txt >head.txt
     # datafile = '../data/head.txt'   
-    print "reading data"
+    print "reading data csv"
     t0 = time.time()
     data = pandas.read_csv(datafile, sep='|', header=0, parse_dates=['DIA'], decimal=',')
     t1 = time.time()
@@ -29,6 +38,7 @@ def init():
     data['DIA_SEMANA'] = data['DIA'].dt.dayofweek # 0 = lunes
     data['MES'] = data['DIA'].dt.month
     data['IMPORTE_MEDIO'] = data['IMPORTE'] / data['NUM_OP']
+
 
 
 # from http://arusahni.net/blog/2014/03/flask-nocache.html
@@ -69,6 +79,15 @@ def query_csv():
 def sectores():
     sectores = sorted(data['SECTOR'].unique().tolist())
     return json.dumps(sectores)
+
+@app.route('/api/weather/')
+def weather():
+    return weather.to_csv(index=False,sep='|', float_format="%.2f")
+
+@app.route('/api/weather_icons/')
+def weather_icons():
+    icons = weather['icon'].unique().tolist()
+    return json.dumps(icons)
 
 if __name__ == "__main__":
     init()

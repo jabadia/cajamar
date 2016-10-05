@@ -37,12 +37,34 @@ app.service('backendApi', function($http)
 				return response.data;
 			});
 		},
+		getWeather: function()
+		{
+			return $http.get('/api/weather/').then(function(response)
+			{
+				var weather = psv.parse(response.data, function(r)
+				{
+					r.day = new Date(r.day);
+					r.temp_min = +r.temp_min;
+					r.temp_max = +r.temp_max;
+					r.humidity = +r.humidity;
+					r.moon_phase =  +r.moon_phase;
+					return r;
+				});
+
+				return weather;
+			});
+		},
 	};
 });
 	
 app.controller('MainCtrl', function($scope, backendApi)
 {
 	$scope.loading = true;
+	backendApi.getWeather().then(function(weather)
+	{
+		$scope.weather = weather;
+		console.table(weather.slice(0,10));
+	});
 	backendApi.getSectores().then(function(sectores)
 	{
 		$scope.sectores = sectores;
