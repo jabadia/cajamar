@@ -2,6 +2,7 @@
 # pm_test.txt
 # pm_train.txt
 *.txt
+weather*
 node_modules
 package.json
 filter.js
