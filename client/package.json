@@ -1,0 +1,23 @@
+{
+  "name": "cajamar-credit-card-viz",
+  "version": "0.0.1",
+  "devDependencies": {
+    "grunt": "",
+    "grunt-cli": "",
+    "grunt-concurrent": "",
+    "grunt-contrib-clean": "",
+    "grunt-contrib-compress": "",
+    "grunt-contrib-concat": "",
+    "grunt-contrib-connect": "",
+    "grunt-contrib-copy": "",
+    "grunt-contrib-cssmin": "",
+    "grunt-contrib-jshint": "",
+    "grunt-contrib-less": "",
+    "grunt-contrib-uglify": "",
+    "grunt-contrib-watch": "",
+    "grunt-ng-annotate": "",
+    "jit-grunt": "",
+    "time-grunt": ""
+  },
+  "dependencies": {}
+}

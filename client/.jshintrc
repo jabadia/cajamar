@@ -1,0 +1,14 @@
+{
+	"smarttabs" 	: true,		// allows use of mixed tabs and spaces for alignment purposes
+	"debug"			: true,		// allows use of debugger statements
+    "undef"         : true,     // true: Require all non-global variables to be declared (prevents global leaks)
+    "predef"        : ["angular","console","_","moment", "$", "d3"], // TODO, remove this and replace by individual directives at the top of each js file
+    "unused"        : true,     // true: Require all defined variables be used
+//    "strict"        : true,     // true: Requires all functions run in ES5 Strict Mode
+
+	"immed"         : false,    // true: Require immediate invocations to be wrapped in parens e.g. `(function () { } ());`
+    "newcap"        : false,    // true: Require capitalization of all constructor functions e.g. `new F()`
+
+    "browser"       : true     // Web Browser (window, document, etc)
+//    "browserify"    : true      // Browserify (node.js code in the browser)
+}

@@ -155,7 +155,7 @@ app.controller('MainCtrl', function($scope, backendApi)
 			return {
 				date: d.key,
 				count: d.value,
-			}
+			};
 		});
 
 		var calendar = calendarHeatmap()
@@ -173,4 +173,4 @@ app.controller('MainCtrl', function($scope, backendApi)
 	});
 });
 
-}())
+}());
