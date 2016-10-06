@@ -46,8 +46,8 @@
 		</header>
 		<main class="row">
 			<section class="col-xs-3">
-				<div class="sector-chart"><h5>sector</h5></div>
-				<div class="month-chart"><h5>mes</h5></div>
+				<div ng-show="selected.sector.id=='*'" class="sector-chart"><h5>sector</h5></div>
+				<div ng-show="selected.month.index==0" class="month-chart"><h5>mes</h5></div>
 				<div class="dayofweek-chart"><h5>dia de la semana</h5></div>
 				<div class="timeofday-chart"><h5>hora</h5></div>
 				<div class="weather-chart"><h5>meteo</h5></div>

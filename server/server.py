@@ -74,9 +74,16 @@ def send_static(path):
 @app.route('/api/cards/')
 def query_csv():
     # aqui se pueden filtrar o procesar los datos antes de devolverlos
-    sector = request.args.get('sector') or 'MODA Y COMPLEMENTOS'
+    sector = request.args.get('sector') or '*'
+    month = request.args.get('month') or None
     result = data if sector == '*' else data[data['SECTOR']== sector]
-    result = result.sample(5000) # muestra aleatoria, para ir más rápido
+    if month:
+        result = result[result['MES']== int(month)]
+
+    max_samples = 20000
+    if result.shape[0] > max_samples:
+        result = result.sample(max_samples) # muestra aleatoria, para ir más rápido
+    print result.shape
     return result.to_csv(index=False, sep='|', float_format="%.2f")
 
 
