@@ -18,6 +18,7 @@
     "leaflet": "^1.0.1",
     "angular": "^1.5.8",
     "lodash": "^4.16.3",
-    "dcjs": "2"
+    "dcjs": "2",
+    "angular-bootstrap": "^2.1.4"
   }
 }

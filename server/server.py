@@ -76,7 +76,7 @@ def query_csv():
     # aqui se pueden filtrar o procesar los datos antes de devolverlos
     sector = request.args.get('sector') or 'MODA Y COMPLEMENTOS'
     result = data if sector == '*' else data[data['SECTOR']== sector]
-    result = result.sample(20000) # muestra aleatoria, para ir más rápido
+    result = result.sample(5000) # muestra aleatoria, para ir más rápido
     return result.to_csv(index=False, sep='|', float_format="%.2f")
 
 

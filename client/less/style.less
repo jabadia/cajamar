@@ -1,7 +1,63 @@
 @import "meteo";
 @import "colors";
 @import "fonts";
+@import "dc-themed";
 
 body {
     .roboto-condensed-light;
+
+    background-color: @bg-color;
+    color: @fg-color;
+}
+
+a {
+    color: @peterriver;
+    &:hover {
+        color: @clouds;
+    }
+}
+
+.subset-controls {
+    margin-top: 20px;
+    text-align: right;
+}
+
+.main-map {
+    width: 100%;
+    height: 500px;
+    margin-bottom: 20px;
+
+    background-color: @silver;
+}
+
+div.weather-chart,
+div.timeofday-chart {
+    padding: 5px;
+    .pie-slice.external { fill: white;}
+    h5 { margin-top: -1px; margin-left: 0px; }
+}
+
+div.weather-chart {
+    float: right;
+    svg {
+        font-family: "MeteoconsRegular";
+        .pie-slice { font-size: 30px; }
+    }
+}
+
+h5 {
+    margin: 4px 0px -6px 5px;
+    text-transform: uppercase;
+    font-weight: 300;
+    font-size: 11px;
+    color: white;
+}
+
+.dropdown-menu {
+    right: 0;
+    left: auto;
+
+    li > a:hover {
+        background-color: @silver;
+    }
 }

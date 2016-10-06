@@ -1,9 +1,9 @@
 (function(){
 "use strict";
 
-var app = angular.module('app', []);
+var app = angular.module('app', ['ui.bootstrap']);
 
-var _FLAT_UI_COLORS = {
+var _FLAT_UI_COLORS = {       // TODO: cambiar a app.const()
 	turquoise: '#1abc9c',
 	emerland: '#2ecc71',
 	peterriver: '#3498db',
@@ -26,7 +26,7 @@ var _FLAT_UI_COLORS = {
 	asbestos: '#7f8c8d',
 };
 
-var _SECTOR_COLORS = [
+var _SECTOR_COLORS = [  // TODO: cambiar a app.const()
 	{ sector: 'ALIMENTACION', color: '#f1c40f'},
 	{ sector: 'AUTO', color: '#2c3e50'},
 	{ sector: 'BELLEZA', color: '#8e44ad'},
@@ -39,8 +39,34 @@ var _SECTOR_COLORS = [
 	{ sector: 'TECNOLOGIA', color: '#2980b9'},
 ];
 
-var _MONTH_NAMES = "-EFMAMJJASOND".split('');
-var _DAY_OF_WEEK_NAMES = "LMXJVSD".split('');
+var _MONTH_NAMES = "-EFMAMJJASOND".split('');  // TODO: cambiar a app.const()
+var _DAY_OF_WEEK_NAMES = "LMXJVSD".split('');  // TODO: cambiar a app.const()
+
+app.constant('MONTHS', [
+	{ initial: '-', name: 'Todos los meses' },
+	{ initial: 'E', name: 'Enero' },
+	{ initial: 'F', name: 'Febrero' },
+	{ initial: 'M', name: 'Marzo' },
+	{ initial: 'A', name: 'Abril' },
+	{ initial: 'M', name: 'Mayo' },
+	{ initial: 'J', name: 'Junio' },
+	{ initial: 'J', name: 'Julio' },
+	{ initial: 'A', name: 'Agosto' },
+	{ initial: 'S', name: 'Septiembre' },
+	{ initial: 'O', name: 'Octubre' },
+	{ initial: 'N', name: 'Noviembre' },
+	{ initial: 'D', name: 'Diciembre' },
+]);
+
+app.constant('WEATHER_TYPES', {
+	'clear-day':           'B',
+	'partly-cloudy-day':   'H',
+	'partly-cloudy-night': 'I',
+	'wind':                'F',
+	'cloudy':              'N',
+	'fog':                 'M',
+	'rain':                'R',
+});
 
 app.service('backendApi', function($http)
 {
@@ -102,10 +128,38 @@ function slug(s)
 	return _.kebabCase(_.deburr(s));
 }
 
-app.controller('MainCtrl', function($scope, backendApi, $q)
+app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPES, $window)
 {
+	var windowWidth = $window.innerWidth;
+	var colWidth = windowWidth / 12;
+	var verticalStretch = 0.8;
+	var padding = 15 * 2;
+	var fgColor = _FLAT_UI_COLORS.nephritis;
+	var defaultMargins = { top: 10, right: 10, bottom: 20, left: 25 };
 
+
+	var ALL_SECTORS = { id:'*', name: 'Todos los Sectores' };
+
+	/* variables */
 	$scope.loading = true;
+	$scope.months = MONTHS;
+	$scope.selected = {
+		month: $scope.months[0],
+		sector: ALL_SECTORS,
+	};
+
+	/* funciones */
+	$scope.selectSector = function(s)
+	{
+		$scope.selected.sector = s;
+	};
+
+	$scope.selectMonth = function(m)
+	{
+		$scope.selected.month = m;
+	};
+
+	/* init */
 	backendApi.getSectores().then(function(sectores)
 	{
 		$scope.sectores = _.map(sectores, function(s)
@@ -115,6 +169,7 @@ app.controller('MainCtrl', function($scope, backendApi, $q)
 				name: s,
 			};
 		});
+		$scope.sectores.unshift(ALL_SECTORS);
 		console.table($scope.sectores);
 		console.log(_.map($scope.sectores,'id'));
 	});
@@ -140,6 +195,7 @@ app.controller('MainCtrl', function($scope, backendApi, $q)
 		var ndx = crossfilter($scope.data);
 
 		var timeofdayDim = ndx.dimension(dc.pluck('FRANJA_HORARIA')),
+			weatherDim = ndx.dimension(dc.pluck('icon')),
 			dayofweekDim = ndx.dimension(function(d) { return [0, d.DIA_SEMANA]; }),//ndx.dimension(dc.pluck('DIA_SEMANA')),
 			monthDim     = ndx.dimension(dc.pluck('MES')),
 			sectorDim    = ndx.dimension(dc.pluck('SECTOR')),
@@ -150,20 +206,23 @@ app.controller('MainCtrl', function($scope, backendApi, $q)
 		var importePerSector    = sectorDim.group().reduceSum(function(d) { return d.IMPORTE; }),
 			importePerMonth     = monthDim.group().reduceSum(function(d) { return d.IMPORTE; }),
 			importePerTimeofday = timeofdayDim.group().reduceSum(function(d) { return d.IMPORTE; }),
+			importePerWeather   = weatherDim.group().reduceSum(function(d) { return d.IMPORTE; }),
 			importePerDayofweek = dayofweekDim.group().reduceSum(function(d) { return d.IMPORTE; }),
 			importePerDay       = calendarDim.group().reduceSum(function(d) { return d.IMPORTE; });
 
 		var sectorChart = dc.rowChart('.sector-chart'),
 			monthChart = dc.barChart('.month-chart'),
 			timeofdayChart = dc.timeSector('.timeofday-chart'),
+			weatherChart = dc.timeSector('.weather-chart'),
 			// dayofweekChart = dc.bubbleChart('.dayofweek-chart');
 			dayofweekChart = dc.heatMap('.dayofweek-chart'),
 			calendarChart = dc.heatMap('.calendar');
 
-		// sectors
+		// sectores
 		sectorChart
-			.width(600)
-			.height(250)
+			.width(colWidth * 3 - padding)
+			.height(verticalStretch * colWidth * 2)
+			.margins(defaultMargins)
 			.dimension(sectorDim)
 			.group(importePerSector)
 			.ordinalColors(_.map(_SECTOR_COLORS,'color')) // los sectores aparecen en orden alfabético
@@ -171,36 +230,35 @@ app.controller('MainCtrl', function($scope, backendApi, $q)
 			.gap(0)
 			.elasticX(true);
 
+
 		monthChart
-			.width(300)
-			.height(150)
+			.width(colWidth * 3 - padding)
+			.height(verticalStretch * colWidth * 1.5)
+			.margins(defaultMargins)
 			.dimension(monthDim)
 			.group(importePerMonth)
 			.x( d3.scale.ordinal())
 			.xUnits(dc.units.ordinal)
-			.colors([_FLAT_UI_COLORS.belizehole])
+			.colors([fgColor])
 			.elasticY(true);
 
 		monthChart.xAxis().tickFormat(function(v) { return _MONTH_NAMES[v]; });
 
-		// time of day
-		timeofdayChart
-			.width(300)
-			.height(300)
-			.dimension(timeofdayDim)
-			.group(importePerTimeofday)
-			.innerRadius(20);
-
 		var extent = d3.extent(importePerDayofweek.all(), function(d) { return d.value; });
 		dayofweekChart
-			.width(500)
-			.height(100)
+			.width(colWidth * 3 - padding)
+			.height(colWidth * 0.6)
+			.margins(defaultMargins)
 			.dimension(dayofweekDim)
 			.group(importePerDayofweek)
-			.xBorderRadius(10)
-			.yBorderRadius(10)
+			.xBorderRadius(5)
+			.yBorderRadius(5)
 			.valueAccessor(function() { return 0; })
-			.linearColors([d3.rgb(_FLAT_UI_COLORS.alizarin).brighter(3), _FLAT_UI_COLORS.alizarin])
+			.linearColors([
+				d3.rgb(fgColor).darker(3),
+				fgColor,
+				d3.rgb(fgColor).brighter(3),
+			])
 			.colorAccessor(function(d) { return d.value; })
 			.calculateColorDomain()
 			.colsLabel(function(v) { return _DAY_OF_WEEK_NAMES[v[1]];})
@@ -222,8 +280,53 @@ app.controller('MainCtrl', function($scope, backendApi, $q)
 			dayofweekChart.calculateColorDomain();
 		});
 
+		// time of day
+		timeofdayChart
+			.width(colWidth * 1.5 - padding - 10)
+			.height(colWidth * 1.5 - padding - 10)
+			.dimension(timeofdayDim)
+			.group(importePerTimeofday)
+			.ordinalColors([
+				d3.rgb(_FLAT_UI_COLORS.midnightblue).darker(0.5),
+				_FLAT_UI_COLORS.midnightblue,
+				d3.rgb(_FLAT_UI_COLORS.midnightblue).brighter(1),
+				_FLAT_UI_COLORS.pumpkin,
+				_FLAT_UI_COLORS.carrot,
+				_FLAT_UI_COLORS.orange,
+				_FLAT_UI_COLORS.orange,
+				_FLAT_UI_COLORS.sunflower,
+				_FLAT_UI_COLORS.sunflower,
+				_FLAT_UI_COLORS.nephritis,
+				_FLAT_UI_COLORS.belizehole,
+				d3.rgb(_FLAT_UI_COLORS.belizehole).darker(0.5),
+			])
+			.externalLabels(-15)
+			.innerRadius(20);
+
+
+		// weather
+		weatherChart
+			.width(colWidth * 1.5 - padding - 10)
+			.height(colWidth * 1.5 - padding - 10)
+			.dimension(weatherDim)
+			.group(importePerWeather)
+			.ordinalColors([
+				_FLAT_UI_COLORS.sunflower,
+				_FLAT_UI_COLORS.belizehole,
+				_FLAT_UI_COLORS.concrete,
+				_FLAT_UI_COLORS.carrot,
+				_FLAT_UI_COLORS.midnightblue,
+				_FLAT_UI_COLORS.greensea,
+				_FLAT_UI_COLORS.wisteria,
+			])
+			.label(function(d) { return WEATHER_TYPES[d.key]; })
+			.externalLabels(-25)
+			.innerRadius(0);
+
+
+
 		calendarChart
-			.width(800)
+			.width(colWidth * 9 - padding - 10)
 			.height(200)
 			.dimension(calendarDim)
 			.group(importePerDay)
@@ -232,7 +335,11 @@ app.controller('MainCtrl', function($scope, backendApi, $q)
 			.rowsLabel(function(v) { return _DAY_OF_WEEK_NAMES[v[0]];})
 			.valueAccessor(function(d) { return d.key[0]; })
 			.keyAccessor(function(d) { return d.key[1]; })
-			.linearColors([d3.rgb(_FLAT_UI_COLORS.alizarin).brighter(3), _FLAT_UI_COLORS.alizarin])
+			.linearColors([
+				d3.rgb(fgColor).darker(3),
+				fgColor,
+				d3.rgb(fgColor).brighter(3),
+			])
 			.colorAccessor(function(d) { return d.value; })
 			.calculateColorDomain();
 		calendarChart.on('preRedraw', function()

@@ -2,63 +2,110 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Credit Cards</title>
+	<title>Análisis de Tarjetas de Crédito</title>
     <link rel="stylesheet" type="text/css" href="bower_components/dcjs/dc.css">
     <link rel="stylesheet" type="text/css" href="bower_components/leaflet/dist/leaflet.css">
     <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.css">
 	<link rel="stylesheet" type="text/css" href="3rd_party/calendar-heatmap/src/calendar-heatmap.js">
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 <body ng-app="app" ng-controller="MainCtrl">
 	<div class="container-fluid">
-		<div ng-if="loading">LOADING</div>
-		<div class="row">
-			<h2 class="col-xs-12">Almería</h2>
+		<header class="row">
+			<div class="col-xs-8">
+				<h1><i class="fa fa-credit-card" aria-hidden="true"></i> Patrones de Consumo en Almería</h1>
+				<small>{{currentDescription}}</small>
+			</div>
+			<div class="subset-controls col-xs-4">
+
+				<div class="btn-group" uib-dropdown>
+					<button type="button" class="btn btn-primary" uib-dropdown-toggle>
+						<i class="fa fa-square" ng-class="selected.sector.id" aria-hidden="true"></i> {{selected.sector.name}}
+					</button>
+					<ul class="dropdown-menu" uib-dropdown-menu role="menu">
+						<li ng-repeat="sector in sectores">
+							<a href="#" ng-click="selectSector(sector)" ng-class="sector.id">{{ sector.name }}</a>
+						</li>
+					</ul>
+				</div>
+
+				<div class="btn-group" uib-dropdown>
+					<button type="button" class="btn btn-primary" uib-dropdown-toggle>
+						{{selected.month.name}}
+					</button>
+					<ul class="dropdown-menu" uib-dropdown-menu role="menu">
+						<li ng-repeat="month in months">
+							<a href="#" ng-click="selectMonth(month)">{{ month.name }}</a>
+						</li>
+					</ul>
+				</div>
+
+			</div>
+
+		</header>
+		<main class="row">
+			<section class="col-xs-3">
+				<div class="sector-chart"><h5>sector</h5></div>
+				<div class="month-chart"><h5>mes</h5></div>
+				<div class="dayofweek-chart"><h5>dia de la semana</h5></div>
+				<div class="timeofday-chart"><h5>hora</h5></div>
+				<div class="weather-chart"><h5>meteo</h5></div>
+			</section>
+			<section class="col-xs-9">
+				<div class="main-map"></div>
+				<div class="calendar"><h5>calendario</h5></div>
+			</section>
+		</main>
+
+		<!--
+		<div class="weather">
+			<i class="meteo-icon clear-day"></i>
+			<i class="meteo-icon partly-cloudy-day"></i>
+			<i class="meteo-icon partly-cloudy-night"></i>
+			<i class="meteo-icon wind"></i>
+			<i class="meteo-icon cloudy"></i>
+			<i class="meteo-icon fog"></i>
+			<i class="meteo-icon rain"></i>
 		</div>
-		<div class="row">
-			<div class="main-map"></div>
-			<div class="sector-chart"></div>
-			<div class="month-chart"></div>
-			<div class="dayofweek-chart"></div>
-			<div class="timeofday-chart"></div>
-		</div>
-		<div class="row">
-			<div class="col-xs-12 calendar"></div>
-		</div>
+
+		<ul>
+			<li ng-repeat="s in sectores" ng-class="s.id">{{s.name}}</li>
+		</ul>
+		-->
+
+		<footer class="row">
+
+			<div class="col-xs-12">
+
+				menciones
+
+				<span class="credits">
+					<a target="_blank" href="https://darksky.net/">Meteo data from Dark Sky</a> |
+					<a target="_blank" href="http://www.alessioatzeni.com/meteocons/">Meteo icons: Alessio Atenzi</a> |
+				</span>
+
+				<span class="help">
+					<a target="_blank" href="http://pandas.pydata.org/pandas-docs/stable/">pandas</a> |
+					<a target="_blank" href="https://github.com/dc-js/dc.js/blob/master/web/docs/api-2.0.0.md">dcjs</a> |
+					<a target="_blank" href="https://github.com/square/crossfilter/wiki/API-Reference">crossfilter</a> |
+				</span>
+
+			</div>
+
+		</footer>
+
+		<div ng-if="loading">CARGANDO</div>
 	</div>
 
-	<div class="weather">
-		<i class="meteo-icon clear-day"></i>
-		<i class="meteo-icon partly-cloudy-day"></i>
-		<i class="meteo-icon partly-cloudy-night"></i>
-		<i class="meteo-icon wind"></i>
-		<i class="meteo-icon cloudy"></i>
-		<i class="meteo-icon fog"></i>
-		<i class="meteo-icon rain"></i>
-	</div>
 
-	<ul>
-		<li ng-repeat="s in sectores" ng-class="s.id">{{s.name}}</li>
-	</ul>
-
-	<div class="credits">
-		<h1>mentions</h1>
-		<a target="_blank" href="https://darksky.net/">Meteo data from Dark Sky</a>
-		<a target="_blank" href="http://www.alessioatzeni.com/meteocons/">Meteo icons: Alessio Atenzi</a>
-	</div>
-
-	<div class="help">
-		<a target="_blank" href="http://pandas.pydata.org/pandas-docs/stable/">pandas</a>
-		<a target="_blank" href="https://github.com/dc-js/dc.js/blob/master/web/docs/api-2.0.0.md">dcjs</a>
-		<a target="_blank" href="https://github.com/square/crossfilter/wiki/API-Reference">crossfilter</a>
-	</div>
-	
 	<script src="bower_components/moment/moment.js"></script>
 	<script src="bower_components/d3/d3.js"></script>
 	<script src="bower_components/crossfilter2/crossfilter.js"></script>
 	<script src="bower_components/dcjs/dc.js"></script>
 	<script src="bower_components/lodash/dist/lodash.js"></script>
 	<script src="bower_components/angular/angular.js"></script>
+	<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
 	<script src="3rd_party/calendar-heatmap/src/calendar-heatmap.js"></script>
 	<script src="js/timeSector.js"></script>
 	<script src="js/app.js"></script>

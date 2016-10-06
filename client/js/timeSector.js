@@ -171,6 +171,7 @@ dc.timeSector = function (parent, chartGroup) {
             var labelsEnter = labels
                 .enter()
                 .append('text')
+                .attr('dy','0.5em')
                 .attr('class', function (d, i) {
                     var classes = _sliceCssClass + ' ' + _labelCssClass + ' _' + i;
                     if (_externalLabelRadius) {
