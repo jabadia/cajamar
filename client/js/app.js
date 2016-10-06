@@ -1,7 +1,7 @@
 (function(){
 "use strict";
 
-var app = angular.module('app', ['ui.bootstrap']);
+var app = angular.module('app', ['ui.bootstrap','mapModule']);
 
 var _FLAT_UI_COLORS = {       // TODO: cambiar a app.const()
 	turquoise: '#1abc9c',
@@ -143,6 +143,7 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 		month: $scope.months[0],
 		sector: ALL_SECTORS,
 	};
+	$scope.currentLayer = 'adultos';
 
 	/* funciones */
 	$scope.selectSector = function(s)

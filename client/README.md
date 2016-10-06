@@ -4,10 +4,20 @@ https://github.com/austinlyons/dcjs-leaflet-untappd
 
 # TODO
 
+- mapa
+- explicación lenguaje natural
+- storytelling
+
+- grafico horas
+- loading
+- iconos paneles
+- readme con fotos de los dibujos
+
+
 - grunt jshint less                             HECHO
 - meses -> ordinal                              HECHO
-- combinar weather y gasto en backend
-- layout general
+- combinar weather y gasto en backend           NO
+- layout general                                HECHO
 
 - grafico de sectores
 - calendario
