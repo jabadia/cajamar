@@ -34,10 +34,15 @@ def init():
     t1 = time.time()
     print "ok %.2fseg" % (t1-t0)
 
+    print data.shape
+
     # enrich data
     data['DIA_SEMANA'] = data['DIA'].dt.dayofweek # 0 = lunes
     data['MES'] = data['DIA'].dt.month
     data['IMPORTE_MEDIO'] = data['IMPORTE'] / data['NUM_OP']
+
+    # mejor hacemos el merge en cliente
+    # data = pandas.merge(data, weather, left_on='DIA', right_on='day')
 
 
 
@@ -71,7 +76,7 @@ def query_csv():
     # aqui se pueden filtrar o procesar los datos antes de devolverlos
     sector = request.args.get('sector') or 'MODA Y COMPLEMENTOS'
     result = data if sector == '*' else data[data['SECTOR']== sector]
-    result = result.sample(10000) # muestra aleatoria, para ir más rápido
+    result = result.sample(20000) # muestra aleatoria, para ir más rápido
     return result.to_csv(index=False, sep='|', float_format="%.2f")
 
 
@@ -82,7 +87,7 @@ def sectores():
 
 @app.route('/api/weather/')
 def weather():
-    return weather.to_csv(index=False,sep='|', float_format="%.2f")
+    return weather.to_csv(index=False, sep='|', float_format="%.2f")
 
 @app.route('/api/weather_icons/')
 def weather_icons():

@@ -7,10 +7,11 @@
     <link rel="stylesheet" type="text/css" href="bower_components/leaflet/dist/leaflet.css">
     <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.css">
 	<link rel="stylesheet" type="text/css" href="3rd_party/calendar-heatmap/src/calendar-heatmap.js">
-	<link rel="stylesheet" type="text/css" href="style.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 <body ng-app="app" ng-controller="MainCtrl">
 	<div class="container-fluid">
+		<div ng-if="loading">LOADING</div>
 		<div class="row">
 			<h2 class="col-xs-12">Almería</h2>
 		</div>
@@ -36,19 +37,30 @@
 		<i class="meteo-icon rain"></i>
 	</div>
 
+	<ul>
+		<li ng-repeat="s in sectores" ng-class="s.id">{{s.name}}</li>
+	</ul>
+
 	<div class="credits">
 		<h1>mentions</h1>
-		<a href="https://darksky.net/">Meteo data from Dark Sky</a>
-		<a href="http://www.alessioatzeni.com/meteocons/">Meteo icons: Alessio Atenzi</a>
+		<a target="_blank" href="https://darksky.net/">Meteo data from Dark Sky</a>
+		<a target="_blank" href="http://www.alessioatzeni.com/meteocons/">Meteo icons: Alessio Atenzi</a>
 	</div>
 
+	<div class="help">
+		<a target="_blank" href="http://pandas.pydata.org/pandas-docs/stable/">pandas</a>
+		<a target="_blank" href="https://github.com/dc-js/dc.js/blob/master/web/docs/api-2.0.0.md">dcjs</a>
+		<a target="_blank" href="https://github.com/square/crossfilter/wiki/API-Reference">crossfilter</a>
+	</div>
+	
 	<script src="bower_components/moment/moment.js"></script>
 	<script src="bower_components/d3/d3.js"></script>
-	<script src="bower_components/crossfilter/crossfilter.js"></script>
+	<script src="bower_components/crossfilter2/crossfilter.js"></script>
 	<script src="bower_components/dcjs/dc.js"></script>
 	<script src="bower_components/lodash/dist/lodash.js"></script>
 	<script src="bower_components/angular/angular.js"></script>
 	<script src="3rd_party/calendar-heatmap/src/calendar-heatmap.js"></script>
-	<script src="app.js"></script>
+	<script src="js/timeSector.js"></script>
+	<script src="js/app.js"></script>
 </body>
 </html>
