@@ -202,25 +202,27 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 
 			var ndx = crossfilter($scope.data);
 
-			var timeofdayDim = ndx.dimension(dc.pluck('FRANJA_HORARIA')),
-				weatherDim = ndx.dimension(dc.pluck('icon')),
-				dayofweekDim = ndx.dimension(function(d) { return [0, d.DIA_SEMANA]; }),//ndx.dimension(dc.pluck('DIA_SEMANA')),
-				monthDim     = ndx.dimension(dc.pluck('MES')),
-				sectorDim    = ndx.dimension(dc.pluck('SECTOR')),
-				cpClienteDim = ndx.dimension(dc.pluck('CP_CLIENTE')),
-				cpComercioDim = ndx.dimension(dc.pluck('CP_COMERCIO')),
-				// calendarDim  = ndx.dimension(dc.pluck('DIA'));
-				calendarDim  = ndx.dimension(function(d) { return [d.DIA_SEMANA,d.SEMANA]; });
+			var dims = {
+				timeofday: ndx.dimension(dc.pluck('FRANJA_HORARIA')),
+				weather: ndx.dimension(dc.pluck('icon')),
+				dayofweek: ndx.dimension(function(d) { return [0, d.DIA_SEMANA]; }),//ndx.dimension(dc.pluck('DIA_SEMANA')),
+				month    : ndx.dimension(dc.pluck('MES')),
+				sector   : ndx.dimension(dc.pluck('SECTOR')),
+				cpCliente: ndx.dimension(dc.pluck('CP_CLIENTE')),
+				cpComercio: ndx.dimension(dc.pluck('CP_COMERCIO')),
+				// calendar : ndx.dimension(dc.pluck('DIA'));
+				calendar : ndx.dimension(function(d) { return [d.DIA_SEMANA,d.SEMANA]; }),
+			};
 
 			var all = ndx.groupAll();
-			var importePerSector    = sectorDim.group().reduceSum(function(d) { return d.IMPORTE; }),
-				importePerMonth     = monthDim.group().reduceSum(function(d) { return d.IMPORTE; }),
-				importePerTimeofday = timeofdayDim.group().reduceSum(function(d) { return d.IMPORTE; }),
-				importePerWeather   = weatherDim.group().reduceSum(function(d) { return d.IMPORTE; }),
-				importePerDayofweek = dayofweekDim.group().reduceSum(function(d) { return d.IMPORTE; }),
-				importePerCpCliente  = cpClienteDim.group().reduceSum(function(d) { return d.IMPORTE; }),
-				importePerCpComercio = cpComercioDim.group().reduceSum(function(d) { return d.IMPORTE; }),
-				ccppClientesPerCpComercio = cpComercioDim.group().reduce(
+			var importePerSector    = dims.sector.group().reduceSum(function(d) { return d.IMPORTE; }),
+				importePerMonth     = dims.month.group().reduceSum(function(d) { return d.IMPORTE; }),
+				importePerTimeofday = dims.timeofday.group().reduceSum(function(d) { return d.IMPORTE; }),
+				importePerWeather   = dims.weather.group().reduceSum(function(d) { return d.IMPORTE; }),
+				importePerDayofweek = dims.dayofweek.group().reduceSum(function(d) { return d.IMPORTE; }),
+				importePerCpCliente  = dims.cpCliente.group().reduceSum(function(d) { return d.IMPORTE; }),
+				importePerCpComercio = dims.cpComercio.group().reduceSum(function(d) { return d.IMPORTE; }),
+				ccppClientesPerCpComercio = dims.cpComercio.group().reduce(
 					function reduceAdd(p, row) {
 						if( !p[row.CP_CLIENTE] )
 							p[row.CP_CLIENTE] = 0;
@@ -233,7 +235,7 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 						return {};
 					}
 				),
-				importePerDay       = calendarDim.group().reduceSum(function(d) { return d.IMPORTE; });
+				importePerDay       = dims.calendar.group().reduceSum(function(d) { return d.IMPORTE; });
 
 			$scope.ccppComercios = _.map(importePerCpComercio.all(),'key');
 
@@ -243,7 +245,7 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 			};
 			$scope.$watch('mapSelection.cpComercio', function()
 			{
-				cpComercioDim.filter($scope.mapSelection.cpComercio);
+				dims.cpComercio.filter($scope.mapSelection.cpComercio);
 				dc.redrawAll();
 			});
 
@@ -274,7 +276,7 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 				.width(colWidth * 3 - padding)
 				.height(verticalStretch * colWidth * 2)
 				.margins(defaultMargins)
-				.dimension(sectorDim)
+				.dimension(dims.sector)
 				.group(importePerSector)
 				.ordinalColors(_.map(_SECTOR_COLORS,'color')) // los sectores aparecen en orden alfabético
 				.colorAccessor(function(d){ return d.key; })
@@ -287,7 +289,7 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 				.width(colWidth * 3 - padding)
 				.height(verticalStretch * colWidth * 1.5)
 				.margins(defaultMargins)
-				.dimension(monthDim)
+				.dimension(dims.month)
 				.group(importePerMonth)
 				.x( d3.scale.ordinal())
 				.xUnits(dc.units.ordinal)
@@ -302,7 +304,7 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 				.width(colWidth * 3 - padding)
 				.height(colWidth * 0.6)
 				.margins(defaultMargins)
-				.dimension(dayofweekDim)
+				.dimension(dims.dayofweek)
 				.group(importePerDayofweek)
 				.xBorderRadius(5)
 				.yBorderRadius(5)
@@ -338,7 +340,7 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 			timeofdayChart
 				.width(colWidth * 1.5 - padding - 10)
 				.height(colWidth * 1.5 - padding - 10)
-				.dimension(timeofdayDim)
+				.dimension(dims.timeofday)
 				.group(importePerTimeofday)
 				.ordinalColors([
 					d3.rgb(FLAT_UI_COLORS.midnightblue).darker(0.5),
@@ -363,7 +365,7 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 			weatherChart
 				.width(colWidth * 1.5 - padding - 10)
 				.height(colWidth * 1.5 - padding - 10)
-				.dimension(weatherDim)
+				.dimension(dims.weather)
 				.group(importePerWeather)
 				.ordinalColors([
 					FLAT_UI_COLORS.sunflower,
@@ -384,7 +386,7 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 			calendarChart
 				.width(colWidth * 9 - padding - 10)
 				.height(200)
-				.dimension(calendarDim)
+				.dimension(dims.calendar)
 				.group(importePerDay)
 				.xBorderRadius(1)
 				.yBorderRadius(1)
