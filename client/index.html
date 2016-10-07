@@ -57,7 +57,13 @@
 				<div class="weather-chart"><h5>meteo</h5></div>
 			</section>
 			<section class="col-xs-9">
-				<div class="main-map" main-map selected-layer='currentLayer'></div>
+				<div class="main-map" main-map color-by='mapColorBy' data-by-cp="dataByCp" map-selection='mapSelection'></div>
+				<div class="select-cp-comercio">COD POSTAL COMERCIOS:
+					<span ng-repeat="cp in ccppComercios"
+						  ng-class="{'selected': mapSelection.cpComercio==cp }"
+						  ng-click="mapSelection.cpComercio=cp"
+					>{{cp}}</span>
+				</div>
 				<div class="calendar"><h5>calendario</h5></div>
 			</section>
 		</main>
@@ -104,7 +110,7 @@
 
 
 	<!--<script src="http://libs.cartocdn.com/cartodb.js/v3/cartodb.js"></script>-->
-	<script src="bower_components/leaflet/dist/leaflet.js"></script>
+	<script src="bower_components/leaflet/dist/leaflet-src.js"></script>
 	<script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js'></script>
 	<script src="bower_components/moment/moment.js"></script>
 	<script src="bower_components/d3/d3.js"></script>

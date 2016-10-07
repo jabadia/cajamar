@@ -4,6 +4,8 @@
 @import "dc-themed";
 @import "map";
 
+[ng-click] { cursor: pointer; }
+
 body {
     .roboto-condensed-light;
 
@@ -26,9 +28,25 @@ a {
 .main-map {
     width: 100%;
     height: 500px;
-    margin-bottom: 20px;
 
     background-color: @silver;
+}
+.select-cp-comercio {
+    margin-top: 3px;
+    margin-bottom: 20px;
+
+    span {
+        border-radius: 3px;
+        padding: 3px;
+        &:hover {
+            background: @fg-color;
+            color: @bg-color;
+        }
+        &.selected {
+            background: @fg-color;
+            color: white;
+        }
+    }
 }
 
 div.weather-chart,

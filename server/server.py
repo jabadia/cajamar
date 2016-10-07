@@ -22,7 +22,10 @@ def init():
     weatherfile = '../data/weather_simplified.csv'
     #
     print "reading weather"
-    weather = pandas.read_csv(weatherfile, sep='|', header=0, parse_dates=['day']).sort_values(by='day');
+    weather = pandas.read_csv(weatherfile,
+                              sep='|',
+                              header=0,
+                              parse_dates=['day']).sort_values(by='day');
 
     datafile = '../data/cards.txt'
     # fichero cards.txt recortado para desarrollar con más agilidad
@@ -30,7 +33,8 @@ def init():
     # datafile = '../data/head.txt'   
     print "reading data csv"
     t0 = time.time()
-    data = pandas.read_csv(datafile, sep='|', header=0, parse_dates=['DIA'], decimal=',')
+    data = pandas.read_csv(datafile, sep='|', header=0, parse_dates=['DIA'], decimal=',',
+                              dtype={'CP_CLIENTE':str, 'CP_COMERCIO':str})
     t1 = time.time()
     print "ok %.2fseg" % (t1-t0)
 

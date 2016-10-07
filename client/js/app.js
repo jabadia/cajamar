@@ -3,7 +3,7 @@
 
 var app = angular.module('app', ['ui.bootstrap','mapModule']);
 
-var _FLAT_UI_COLORS = {       // TODO: cambiar a app.const()
+app.constant('FLAT_UI_COLORS', {
 	turquoise: '#1abc9c',
 	emerland: '#2ecc71',
 	peterriver: '#3498db',
@@ -24,7 +24,7 @@ var _FLAT_UI_COLORS = {       // TODO: cambiar a app.const()
 	pomegranate: '#c0392b',
 	silver: '#bdc3c7',
 	asbestos: '#7f8c8d',
-};
+});
 
 var _SECTOR_COLORS = [  // TODO: cambiar a app.const()
 	{ sector: 'ALIMENTACION', color: '#f1c40f'},
@@ -125,13 +125,13 @@ function slug(s)
 	return _.kebabCase(_.deburr(s));
 }
 
-app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPES, $window)
+app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPES, FLAT_UI_COLORS, $window, $timeout)
 {
 	var windowWidth = $window.innerWidth;
 	var colWidth = windowWidth / 12;
 	var verticalStretch = 0.8;
 	var padding = 15 * 2;
-	var fgColor =_FLAT_UI_COLORS.nephritis;  // _FLAT_UI_COLORS.nephritis;
+	var fgColor = FLAT_UI_COLORS.nephritis;  // FLAT_UI_COLORS.nephritis;
 	var defaultMargins = { top: 10, right: 10, bottom: 20, left: 25 };
 
 
@@ -143,7 +143,10 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 		month: $scope.months[0],
 		sector: ALL_SECTORS,
 	};
-	$scope.currentLayer = 'adultos';
+	$scope.mapSelection = {
+		cpComercio: null,
+	};
+	$scope.mapColorBy = 'IMPORTE';
 
 	/* funciones */
 	$scope.selectSector = function(s)
@@ -204,6 +207,8 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 				dayofweekDim = ndx.dimension(function(d) { return [0, d.DIA_SEMANA]; }),//ndx.dimension(dc.pluck('DIA_SEMANA')),
 				monthDim     = ndx.dimension(dc.pluck('MES')),
 				sectorDim    = ndx.dimension(dc.pluck('SECTOR')),
+				cpClienteDim = ndx.dimension(dc.pluck('CP_CLIENTE')),
+				cpComercioDim = ndx.dimension(dc.pluck('CP_COMERCIO')),
 				// calendarDim  = ndx.dimension(dc.pluck('DIA'));
 				calendarDim  = ndx.dimension(function(d) { return [d.DIA_SEMANA,d.SEMANA]; });
 
@@ -213,7 +218,39 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 				importePerTimeofday = timeofdayDim.group().reduceSum(function(d) { return d.IMPORTE; }),
 				importePerWeather   = weatherDim.group().reduceSum(function(d) { return d.IMPORTE; }),
 				importePerDayofweek = dayofweekDim.group().reduceSum(function(d) { return d.IMPORTE; }),
+				importePerCpCliente  = cpClienteDim.group().reduceSum(function(d) { return d.IMPORTE; }),
+				importePerCpComercio = cpComercioDim.group().reduceSum(function(d) { return d.IMPORTE; }),
+				ccppClientesPerCpComercio = cpComercioDim.group().reduce(
+					function reduceAdd(p, row) {
+						if( !p[row.CP_CLIENTE] )
+							p[row.CP_CLIENTE] = 0;
+						p[row.CP_CLIENTE] += row.IMPORTE;
+						return p;},
+					function reduceRemove(p, row) {
+						p[row.CP_CLIENTE] -= row.IMPORTE;
+						return p;},
+					function reduceInitial() {
+						return {};
+					}
+				),
 				importePerDay       = calendarDim.group().reduceSum(function(d) { return d.IMPORTE; });
+
+			$scope.ccppComercios = _.map(importePerCpComercio.all(),'key');
+
+			$scope.dataByCp = {
+				importe: importePerCpCliente,
+				ccppClientes: ccppClientesPerCpComercio,
+			};
+			$scope.$watch('mapSelection.cpComercio', function()
+			{
+				cpComercioDim.filter($scope.mapSelection.cpComercio);
+			});
+
+			function updateMap()
+			{
+				$scope.$broadcast('filters-changed');
+			}
+
 
 			var sectorChart = dc.rowChart('.sector-chart'),
 				monthChart = dc.barChart('.month-chart'),
@@ -233,7 +270,8 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 				.ordinalColors(_.map(_SECTOR_COLORS,'color')) // los sectores aparecen en orden alfabético
 				.colorAccessor(function(d){ return d.key; })
 				.gap(0)
-				.elasticX(true);
+				.elasticX(true)
+				.on('filtered', updateMap);
 
 
 			monthChart
@@ -245,7 +283,8 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 				.x( d3.scale.ordinal())
 				.xUnits(dc.units.ordinal)
 				.colors([fgColor])
-				.elasticY(true);
+				.elasticY(true)
+				.on('filtered', updateMap);
 
 			monthChart.xAxis().tickFormat(function(v) { return _MONTH_NAMES[v]; });
 
@@ -267,7 +306,8 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 				.colorAccessor(function(d) { return d.value; })
 				.calculateColorDomain()
 				.colsLabel(function(v) { return _DAY_OF_WEEK_NAMES[v[1]];})
-				.rowsLabel('');
+				.rowsLabel('')
+				.on('filtered', updateMap);
 				// .x( d3.scale.ordinal().domain([0,1,2,3,4,5,6]))
 				// .xUnits(dc.units.ordinal)
 				// .y( d3.scale.linear().domain([-10000,10000]))
@@ -292,21 +332,22 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 				.dimension(timeofdayDim)
 				.group(importePerTimeofday)
 				.ordinalColors([
-					d3.rgb(_FLAT_UI_COLORS.midnightblue).darker(0.5),
-					_FLAT_UI_COLORS.midnightblue,
-					d3.rgb(_FLAT_UI_COLORS.midnightblue).brighter(1),
-					_FLAT_UI_COLORS.pumpkin,
-					_FLAT_UI_COLORS.carrot,
-					_FLAT_UI_COLORS.orange,
-					_FLAT_UI_COLORS.orange,
-					_FLAT_UI_COLORS.sunflower,
-					_FLAT_UI_COLORS.sunflower,
-					_FLAT_UI_COLORS.nephritis,
-					_FLAT_UI_COLORS.belizehole,
-					d3.rgb(_FLAT_UI_COLORS.belizehole).darker(0.5),
+					d3.rgb(FLAT_UI_COLORS.midnightblue).darker(0.5),
+					FLAT_UI_COLORS.midnightblue,
+					d3.rgb(FLAT_UI_COLORS.midnightblue).brighter(1),
+					FLAT_UI_COLORS.pumpkin,
+					FLAT_UI_COLORS.carrot,
+					FLAT_UI_COLORS.orange,
+					FLAT_UI_COLORS.orange,
+					FLAT_UI_COLORS.sunflower,
+					FLAT_UI_COLORS.sunflower,
+					FLAT_UI_COLORS.nephritis,
+					FLAT_UI_COLORS.belizehole,
+					d3.rgb(FLAT_UI_COLORS.belizehole).darker(0.5),
 				])
 				.externalLabels(-15)
-				.innerRadius(20);
+				.innerRadius(20)
+				.on('filtered', updateMap);
 
 
 			// weather
@@ -316,17 +357,18 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 				.dimension(weatherDim)
 				.group(importePerWeather)
 				.ordinalColors([
-					_FLAT_UI_COLORS.sunflower,
-					_FLAT_UI_COLORS.belizehole,
-					_FLAT_UI_COLORS.concrete,
-					_FLAT_UI_COLORS.carrot,
-					_FLAT_UI_COLORS.midnightblue,
-					_FLAT_UI_COLORS.greensea,
-					_FLAT_UI_COLORS.wisteria,
+					FLAT_UI_COLORS.sunflower,
+					FLAT_UI_COLORS.belizehole,
+					FLAT_UI_COLORS.concrete,
+					FLAT_UI_COLORS.carrot,
+					FLAT_UI_COLORS.midnightblue,
+					FLAT_UI_COLORS.greensea,
+					FLAT_UI_COLORS.wisteria,
 				])
 				.label(function(d) { return WEATHER_TYPES[d.key]; })
 				.externalLabels(-25)
-				.innerRadius(0);
+				.innerRadius(0)
+				.on('filtered', updateMap);
 
 
 
@@ -346,7 +388,9 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 					d3.rgb(fgColor).brighter(3),
 				])
 				.colorAccessor(function(d) { return d.value; })
-				.calculateColorDomain();
+				.calculateColorDomain()
+				.on('filtered', updateMap);
+
 			calendarChart.on('preRedraw', function()
 			{
 				calendarChart.calculateColorDomain();
