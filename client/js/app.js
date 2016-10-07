@@ -1,7 +1,7 @@
 (function(){
 "use strict";
 
-var app = angular.module('app', ['ui.bootstrap','mapModule']);
+var app = angular.module('app', ['ui.bootstrap','mapModule','story']);
 
 app.constant('FLAT_UI_COLORS', {
 	turquoise: '#1abc9c',
@@ -125,7 +125,7 @@ function slug(s)
 	return _.kebabCase(_.deburr(s));
 }
 
-app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPES, FLAT_UI_COLORS, $window, $timeout)
+app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPES, FLAT_UI_COLORS, $window, theStory, $timeout)
 {
 	var windowWidth = $window.innerWidth;
 	var colWidth = windowWidth / 12;
@@ -256,23 +256,69 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 				dc.redrawAll();
 			};
 
+			$scope.takeSnapshot = function()
+			{
+				var snapshot = {};
+				_.each(charts, function(c, name)
+				{
+					snapshot[name] = c.filters();
+				});
+				snapshot['mapSelection.cpComercio'] = $scope.mapSelection.cpComercio;
+
+				console.log(JSON.stringify(snapshot));
+			};
+
+			$scope.playStory = function()
+			{
+				$timeout.cancel($scope.currentTimeout);
+				$scope.playing = true;
+
+				function applyStep(i)
+				{
+					if( i >= theStory.length )
+						i=0;
+
+					var currentStep = theStory[i];
+					_.each(currentStep, function(filters, chart)
+					{
+						if( chart == 'mapSelection.cpComercio')
+							$scope.mapSelection.cpComercio = filters;
+						else
+							charts[chart].filter(filters.length === 0? null: filters);
+					});
+					dc.redrawAll();
+					$scope.currentTimeout = $timeout(function(){ applyStep(i+1); }, 5000);
+				}
+
+				$scope.resetFilters();
+				applyStep(0);
+			};
+
+			$scope.stopStory = function()
+			{
+				$timeout.cancel($scope.currentTimeout);
+				$scope.playing = false;
+				$scope.resetFilters();
+			};
+
 			function updateMap(chart, filter)
 			{
 				$scope.$broadcast('filters-changed');
 				console.log(chart.filters());
 			}
 
-
-			var sectorChart = dc.rowChart('.sector-chart'),
-				monthChart = dc.barChart('.month-chart'),
-				timeofdayChart = dc.timeSector('.timeofday-chart'),
-				weatherChart = dc.timeSector('.weather-chart'),
-				// dayofweekChart = dc.bubbleChart('.dayofweek-chart');
-				dayofweekChart = dc.heatMap('.dayofweek-chart'),
-				calendarChart = dc.heatMap('.calendar');
+			var charts = {
+				sector: dc.rowChart('.sector-chart'),
+				month: dc.barChart('.month-chart'),
+				timeofday: dc.timeSector('.timeofday-chart'),
+				weather: dc.timeSector('.weather-chart'),
+				// dayofweek: dc.bubbleChart('.dayofweek-chart'),
+				dayofweek: dc.heatMap('.dayofweek-chart'),
+				calendar: dc.heatMap('.calendar'),
+			};
 
 			// sectores
-			sectorChart
+			charts.sector
 				.width(colWidth * 3 - padding)
 				.height(verticalStretch * colWidth * 2)
 				.margins(defaultMargins)
@@ -285,7 +331,7 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 				.on('filtered', updateMap);
 
 
-			monthChart
+			charts.month
 				.width(colWidth * 3 - padding)
 				.height(verticalStretch * colWidth * 1.5)
 				.margins(defaultMargins)
@@ -297,10 +343,10 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 				.elasticY(true)
 				.on('filtered', updateMap);
 
-			monthChart.xAxis().tickFormat(function(v) { return _MONTH_NAMES[v]; });
+			charts.month.xAxis().tickFormat(function(v) { return _MONTH_NAMES[v]; });
 
 			var extent = d3.extent(importePerDayofweek.all(), function(d) { return d.value; });
-			dayofweekChart
+			charts.dayofweek
 				.width(colWidth * 3 - padding)
 				.height(colWidth * 0.6)
 				.margins(defaultMargins)
@@ -330,14 +376,14 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 				// 	return d.value; /// 100000;
 				// })
 				// .elasticRadius(false);
-			// dayofweekChart.xAxis().tickFormat(function(v) { return _DAY_OF_WEEK_NAMES[v]; });
-			dayofweekChart.on('preRedraw', function()
+			// charts.dayofweek.xAxis().tickFormat(function(v) { return _DAY_OF_WEEK_NAMES[v]; });
+			charts.dayofweek.on('preRedraw', function()
 			{
-				dayofweekChart.calculateColorDomain();
+				charts.dayofweek.calculateColorDomain();
 			});
 
 			// time of day
-			timeofdayChart
+			charts.timeofday
 				.width(colWidth * 1.5 - padding - 10)
 				.height(colWidth * 1.5 - padding - 10)
 				.dimension(dims.timeofday)
@@ -362,7 +408,7 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 
 
 			// weather
-			weatherChart
+			charts.weather
 				.width(colWidth * 1.5 - padding - 10)
 				.height(colWidth * 1.5 - padding - 10)
 				.dimension(dims.weather)
@@ -383,7 +429,7 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 
 
 
-			calendarChart
+			charts.calendar
 				.width(colWidth * 9 - padding - 10)
 				.height(200)
 				.dimension(dims.calendar)
@@ -402,9 +448,9 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 				.calculateColorDomain()
 				.on('filtered', updateMap);
 
-			calendarChart.on('preRedraw', function()
+			charts.calendar.on('preRedraw', function()
 			{
-				calendarChart.calculateColorDomain();
+				charts.calendar.calculateColorDomain();
 			});
 
 			dc.renderAll();

@@ -45,7 +45,7 @@
 					</ul>
 				</div>
 
-				<div class="btn btn-primary" ng-click="resetFilters()"><i class="fa fa-refresh"></i></div>
+				<button class="btn btn-primary" ng-click="resetFilters()"><i class="fa fa-refresh"></i></button>
 			</div>
 
 		</header>
@@ -87,6 +87,10 @@
 
 		<footer class="row">
 
+				<button class="btn btn-danger" ng-click="takeSnapshot()"><i class="fa fa-camera"></i></button>
+				<button class="btn btn-success" ng-show="!playing" ng-click="playStory()"><i class="fa fa-play"></i></button>
+				<button class="btn btn-success" ng-show="playing" ng-click="stopStory()"><i class="fa fa-stop"></i></button>
+
 			<div class="col-xs-12">
 
 				menciones
@@ -123,6 +127,7 @@
 	<script src="3rd_party/calendar-heatmap/src/calendar-heatmap.js"></script>
 	<script src="js/timeSector.js"></script>
 	<script src="js/map.js"></script>
+	<script src="js/story.js"></script>
 	<script src="js/app.js"></script>
 </body>
 </html>
