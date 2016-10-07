@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.css">
 	<link rel="stylesheet" type="text/css" href="3rd_party/calendar-heatmap/src/calendar-heatmap.js">
 	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdn.rawgit.com/konpa/devicon/master/devicon.min.css">
 	<link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.css" />
 	<!--[if lte IE 8]>
 		<link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.ie.css" />
@@ -88,32 +89,39 @@
 		<footer class="row">
 
 			<div class="col-xs-12">
-				<button class="btn btn-danger" ng-click="takeSnapshot()"><i class="fa fa-camera"></i></button>
-				<button class="btn btn-success" ng-show="!playing" ng-click="playStory()"><i class="fa fa-play"></i></button>
-				<button class="btn btn-success" ng-show="playing" ng-click="stopStory()"><i class="fa fa-stop"></i></button>
+				<button class="btn btn-danger btn-sm" ng-click="takeSnapshot()"><i class="fa fa-camera"></i></button>
+				<button class="btn btn-success btn-sm" ng-show="!playing" ng-click="playStory()"><i class="fa fa-play"></i></button>
+				<button class="btn btn-success btn-sm" ng-show="playing" ng-click="stopStory()"><i class="fa fa-stop"></i></button>
 			</div>
 
 			<div class="col-xs-12">
 
-				menciones
+				<span>
+					menciones:
+					&nbsp;
+				</span>
 
-				<span class="credits">
-					<a target="_blank" href="https://darksky.net/">Meteo data from Dark Sky</a> |
-					<a target="_blank" href="http://www.alessioatzeni.com/meteocons/">Meteo icons: Alessio Atenzi</a> |
-					<a target="_blank" href="http://www.ine.es/">INE</a> |
-					<a target="_blank" href="http://fontawesome.io/icons/">FontAwesome</a> |
+				<span class="data-sources">
+					<a target="_blank" href="https://darksky.net/"><i class="fa fa-database" aria-hidden="true"></i> Dark Sky</a> |
+					<a target="_blank" href="http://www.ine.es/"><i class="fa fa-database" aria-hidden="true"></i> INE</a> |
+				</span>
+
+				<span class="icons">
+					<a target="_blank" href="http://www.alessioatzeni.com/meteocons/"><i class="meteo-icon clear-day" aria-hidden="true"></i> Alessio Atenzi</a> |
+					<a target="_blank" href="http://fontawesome.io/icons/"><i class="fa fa-fort-awesome" aria-hidden="true"></i> FontAwesome</a> |
+					<a target="_blank" href="http://devicon.fr/"><i class="fa fa-fonticons" aria-hidden="true"></i> Devicon</a> |
 				</span>
 
 				<span class="help">
-					<a target="_blank" href="http://pandas.pydata.org/pandas-docs/stable/">pandas</a> |
-					<a target="_blank" href="http://flask.pocoo.org/">flask</a> |
-					<a target="_blank" href="https://github.com/dc-js/dc.js/blob/master/web/docs/api-2.0.0.md">dc.js</a> |
-					<a target="_blank" href="https://github.com/square/crossfilter/wiki/API-Reference">crossfilter</a> |
-					<a target="_blank" href="https://d3js.org/">d3.js</a> |
-					<a target="_blank" href="http://leafletjs.com/">leaflet</a> |
-					<a target="_blank" href="https://github.com/mapbox/leaflet-omnivore">leaflet-omnivore</a> |
-					<a target="_blank" href="https://docs.angularjs.org/api">angular.js</a> |
-					<a target="_blank" href="http://momentjs.com/docs/">moment.js</a> |
+					<a target="_blank" href="http://pandas.pydata.org/pandas-docs/stable/"><i class="devicon-python-plain"></i> pandas</a> |
+					<a target="_blank" href="http://flask.pocoo.org/"><i class="devicon-python-plain"></i> flask</a> |
+					<a target="_blank" href="https://github.com/dc-js/dc.js/blob/master/web/docs/api-2.0.0.md"><i class="devicon-javascript-plain"></i> dc.js</a> |
+					<a target="_blank" href="https://github.com/square/crossfilter/wiki/API-Reference">><i class="devicon-javascript-plain"></i> crossfilter</a> |
+					<a target="_blank" href="https://d3js.org/"><i class="devicon-d3js-plain"></i> d3.js</a> |
+					<a target="_blank" href="http://leafletjs.com/">><i class="devicon-javascript-plain"></i> leaflet</a> |
+					<a target="_blank" href="https://github.com/mapbox/leaflet-omnivore">><i class="devicon-javascript-plain"></i> leaflet-omnivore</a> |
+					<a target="_blank" href="https://docs.angularjs.org/api"><i class="devicon-angularjs-plain"></i> angular.js</a> |
+					<a target="_blank" href="http://momentjs.com/docs/"><i class="devicon-javascript-plain"></i> moment.js</a>
 				</span>
 
 			</div>
@@ -121,6 +129,7 @@
 		</footer>
 
 		<div ng-if="loading">CARGANDO</div>
+
 	</div>
 
 
