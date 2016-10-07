@@ -57,6 +57,18 @@
 				<div class="dayofweek-chart"><h5>dia de la semana</h5></div>
 				<div class="timeofday-chart"><h5>hora</h5></div>
 				<div class="weather-chart"><h5>meteo</h5></div>
+				<div ng-show="currentFilters.length" class="current-filters">
+					<h5>Filtros</h5>
+					<table>
+						<tr ng-repeat='f in currentFilters'>
+							<td class="name">{{ f.name }}:</td>
+							<td class="values" ng-class="{'meteo-icon': f.name=='Meteo'}">{{ f.values }}</td>
+						</tr>
+					</table>
+					<div class="filter-controls">
+						<a href="#" ng-click="resetFilters()"><i class="fa fa-times"></i> quitar filtros</a>
+					</div>
+				</div>
 			</section>
 			<section class="col-xs-9">
 				<div class="main-map" main-map color-by='mapColorBy' data-by-cp="dataByCp" map-selection='mapSelection'></div>
@@ -86,14 +98,25 @@
 		</ul>
 		-->
 
-		<footer class="row">
-
+		<div class="row">
 			<div class="col-xs-12">
-				<button class="btn btn-danger btn-sm" ng-click="takeSnapshot()"><i class="fa fa-camera"></i></button>
-				<button class="btn btn-success btn-sm" ng-show="!playing" ng-click="playStory()"><i class="fa fa-play"></i></button>
-				<button class="btn btn-success btn-sm" ng-show="playing" ng-click="stopStory()"><i class="fa fa-stop"></i></button>
-			</div>
+				<div class="play-bar">
+					<button class="btn btn-danger btn-xs" ng-click="takeSnapshot()"><i class="fa fa-camera"></i></button>
+					<button class="btn btn-success btn-xs" ng-show="!playing" ng-click="playStory()"><i class="fa fa-play"></i></button>
+					<button class="btn btn-success btn-xs" ng-show="playing" ng-click="stopStory()"><i class="fa fa-stop"></i></button>
 
+					<div class="play-bar-steps">
+						<div ng-repeat="step in theStory"
+							 class="play-step"
+							 ng-class="{'selected': step==currentStep}"
+							 ng-click="stopStory(); applyStep(step)">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<footer class="row">
 			<div class="col-xs-12">
 
 				<span>

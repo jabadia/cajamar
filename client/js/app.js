@@ -147,6 +147,7 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 		cpComercio: null,
 	};
 	$scope.mapColorBy = 'IMPORTE';
+	$scope.theStory = theStory;
 
 	/* funciones */
 	$scope.selectSector = function(s)
@@ -252,6 +253,7 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 			{
 				dims.cpComercio.filter($scope.mapSelection.cpComercio);
 				dc.redrawAll();
+				updateFiltersDescription();
 			});
 
 			$scope.resetFilters = function()
@@ -270,7 +272,7 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 				});
 				snapshot['mapSelection.cpComercio'] = $scope.mapSelection.cpComercio;
 
-				console.log(JSON.stringify(snapshot));
+				$window.prompt("Estado actual de los filtros", JSON.stringify(snapshot));
 			};
 
 			$scope.playStory = function()
@@ -278,38 +280,73 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 				$timeout.cancel($scope.currentTimeout);
 				$scope.playing = true;
 
-				function applyStep(i)
+				function advanceStep(i)
 				{
 					if( i >= theStory.length )
 						i=0;
 
-					var currentStep = theStory[i];
-					_.each(currentStep, function(filters, chart)
-					{
-						if( chart == 'mapSelection.cpComercio')
-							$scope.mapSelection.cpComercio = filters;
-						else
-							charts[chart].filter(filters.length === 0? null: filters);
-					});
-					dc.redrawAll();
-					$scope.currentTimeout = $timeout(function(){ applyStep(i+1); }, 5000);
+					$scope.applyStep(theStory[i]);
+					$scope.currentTimeout = $timeout(function(){ advanceStep(i+1); }, 5000);
 				}
 
 				$scope.resetFilters();
-				applyStep(0);
+				advanceStep(0);
 			};
 
 			$scope.stopStory = function()
 			{
 				$timeout.cancel($scope.currentTimeout);
 				$scope.playing = false;
+				$scope.currentStep = null;
 				$scope.resetFilters();
+			};
+
+			$scope.applyStep = function(step)
+			{
+				$scope.currentStep = step;
+				_.each($scope.currentStep.filters, function(filters, chart)
+				{
+					if( chart == 'mapSelection.cpComercio')
+						$scope.mapSelection.cpComercio = filters;
+					else
+						charts[chart].filter(filters.length === 0? null: filters);
+				});
+				dc.redrawAll();
 			};
 
 			function updateMap(chart, filter)
 			{
 				$scope.$broadcast('filters-changed');
-				console.log(chart.filters());
+				updateFiltersDescription();
+			}
+
+			function updateFiltersDescription()
+			{
+				var chartFormat = {
+					sector: { name: 'Sector', format: function(v) { return v.join(', '); }},
+					month: { name: 'Mes', format: function(v) { return _.map(v, function(m) { return _.find(MONTHS, {index:m}).name; }).join(', '); }},
+					timeofday: { name: 'Franja Horaria', format: function(v) { return v.join(', '); }},
+					weather: { name: 'Meteo', format: function(v) { return _.map(v, function(wt) { return WEATHER_TYPES[wt]; }).join(', '); }},
+					// dayofweek: { name: '', format: function(v) { return v; }
+					dayofweek: { name: 'Día de la Semana', format: function(v) { return _.map(v, function(da) { return _DAY_OF_WEEK_NAMES[da[1]]; }).join(', ');}},
+					calendar: { name: 'Día del Año', format: function(v) { return v; }},
+				};
+
+				$scope.currentFilters = [];
+				_.each(charts, function(c, chartId)
+				{
+					var values = c.filters();
+					if( values.length > 0)
+						$scope.currentFilters.push({
+							name: chartFormat[chartId].name,
+							values: chartFormat[chartId].format(values)
+						});
+				});
+				if($scope.mapSelection.cpComercio)
+					$scope.currentFilters.push({name: 'C.P. comercio', values: $scope.mapSelection.cpComercio});
+
+				if( !$scope.$$phase )
+					$scope.$apply();
 			}
 
 			var charts = {

@@ -15,8 +15,13 @@ body {
 
 a {
     color: @peterriver;
+    &:visited {
+        color: lighten(@peterriver, 10%);
+        text-decoration: none;
+    }
     &:hover {
         color: @clouds;
+        text-decoration: none;
     }
 }
 
@@ -64,6 +69,26 @@ div.weather-chart {
     }
 }
 
+div.current-filters {
+
+    background-color: @wetasphalt;   // like dc-chart in dc-themed.less
+    margin-bottom: 20px;
+    float: left;
+    width: 100%;
+    font-size: 12px;
+
+    table {
+        margin: 10px 0px;
+        td { padding: 0 5px;}
+        td.name { color: @clouds; }
+    }
+
+    div.filter-controls {
+        text-align: right;
+        margin-right: 3px;
+    }
+}
+
 h5 {
     margin: 4px 0px -6px 5px;
     text-transform: uppercase;
@@ -81,11 +106,35 @@ h5 {
     }
 }
 
-footer {
-    &>div {
-        margin-top: 5px;
+.play-bar {
+    display: flex;
+    button { margin-right: 2px;}
+    background-color: @wetasphalt;
+    padding: 10px;
+
+    .play-bar-steps {
+        flex: 1 0 auto;
+        margin-left: 5px;
+        display: flex;
+        flex-flow: row;
+        align-items: center;
     }
-    a:hover {
-        text-decoration: none;
+
+    .play-step {
+        flex: 1 0 auto;
+        height: 10px;
+        margin-left: 2px;
+        background: @belizehole;
+
+        &:hover, &.selected {
+            background: @clouds;
+        }
     }
 }
+
+footer {
+    &>div {
+        margin-top: 20px;
+    }
+}
+
