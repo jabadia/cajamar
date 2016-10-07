@@ -69,6 +69,12 @@
 						<a href="#" ng-click="resetFilters()"><i class="fa fa-times"></i> quitar filtros</a>
 					</div>
 				</div>
+				<div ng-show="currentStep.description" class="story-description">
+					<h5>¿Qué dicen los datos?</h5>
+					<div>
+						{{ currentStep.description }}
+					</div>
+				</div>
 			</section>
 			<section class="col-xs-9">
 				<div class="main-map" main-map color-by='mapColorBy' data-by-cp="dataByCp" map-selection='mapSelection'></div>

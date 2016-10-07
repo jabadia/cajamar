@@ -308,8 +308,10 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 				{
 					if( chart == 'mapSelection.cpComercio')
 						$scope.mapSelection.cpComercio = filters;
+					else if( chart == 'calendar' || chart == 'dayofweek' )
+						charts[chart].filter(filters.length === 0? null: angular.copy(filters));
 					else
-						charts[chart].filter(filters.length === 0? null: filters);
+						charts[chart].filter(filters.length === 0? null: [angular.copy(filters)]);
 				});
 				dc.redrawAll();
 			};
@@ -324,11 +326,22 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 			{
 				var chartFormat = {
 					sector: { name: 'Sector', format: function(v) { return v.join(', '); }},
-					month: { name: 'Mes', format: function(v) { return _.map(v, function(m) { return _.find(MONTHS, {index:m}).name; }).join(', '); }},
+					month: { name: 'Mes', format: function(v) {
+						return _.map(v, function(m) {
+							return _.find(MONTHS, {index:m}).name; }).join(', ');
+					}},
 					timeofday: { name: 'Franja Horaria', format: function(v) { return v.join(', '); }},
 					weather: { name: 'Meteo', format: function(v) { return _.map(v, function(wt) { return WEATHER_TYPES[wt]; }).join(', '); }},
 					// dayofweek: { name: '', format: function(v) { return v; }
-					dayofweek: { name: 'Día de la Semana', format: function(v) { return _.map(v, function(da) { return _DAY_OF_WEEK_NAMES[da[1]]; }).join(', ');}},
+					dayofweek: { name: 'Día de la Semana', format: function(v) {
+						console.log(v);
+						return _.map(v, function(da) {
+							console.log(da);
+							if(_.isArray(da[0]))
+								da = da[0];
+							return _DAY_OF_WEEK_NAMES[da[1]];
+						}).join(', ');
+					}},
 					calendar: { name: 'Día del Año', format: function(v) { return v; }},
 				};
 
