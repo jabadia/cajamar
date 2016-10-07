@@ -244,11 +244,20 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 			$scope.$watch('mapSelection.cpComercio', function()
 			{
 				cpComercioDim.filter($scope.mapSelection.cpComercio);
+				dc.redrawAll();
 			});
 
-			function updateMap()
+			$scope.resetFilters = function()
+			{
+				$scope.mapSelection.cpComercio = null;
+				dc.filterAll();
+				dc.redrawAll();
+			};
+
+			function updateMap(chart, filter)
 			{
 				$scope.$broadcast('filters-changed');
+				console.log(chart.filters());
 			}
 
 
