@@ -62,7 +62,7 @@
 				<div class="select-cp-comercio">COD POSTAL COMERCIOS:
 					<span ng-repeat="cp in ccppComercios"
 						  ng-class="{'selected': mapSelection.cpComercio==cp }"
-						  ng-click="mapSelection.cpComercio=cp"
+						  ng-click="selectCpComercio(cp)"
 					>{{cp}}</span>
 				</div>
 				<div class="calendar"><h5>calendario</h5></div>
@@ -87,9 +87,11 @@
 
 		<footer class="row">
 
+			<div class="col-xs-12">
 				<button class="btn btn-danger" ng-click="takeSnapshot()"><i class="fa fa-camera"></i></button>
 				<button class="btn btn-success" ng-show="!playing" ng-click="playStory()"><i class="fa fa-play"></i></button>
 				<button class="btn btn-success" ng-show="playing" ng-click="stopStory()"><i class="fa fa-stop"></i></button>
+			</div>
 
 			<div class="col-xs-12">
 
@@ -98,12 +100,20 @@
 				<span class="credits">
 					<a target="_blank" href="https://darksky.net/">Meteo data from Dark Sky</a> |
 					<a target="_blank" href="http://www.alessioatzeni.com/meteocons/">Meteo icons: Alessio Atenzi</a> |
+					<a target="_blank" href="http://www.ine.es/">INE</a> |
+					<a target="_blank" href="http://fontawesome.io/icons/">FontAwesome</a> |
 				</span>
 
 				<span class="help">
 					<a target="_blank" href="http://pandas.pydata.org/pandas-docs/stable/">pandas</a> |
-					<a target="_blank" href="https://github.com/dc-js/dc.js/blob/master/web/docs/api-2.0.0.md">dcjs</a> |
+					<a target="_blank" href="http://flask.pocoo.org/">flask</a> |
+					<a target="_blank" href="https://github.com/dc-js/dc.js/blob/master/web/docs/api-2.0.0.md">dc.js</a> |
 					<a target="_blank" href="https://github.com/square/crossfilter/wiki/API-Reference">crossfilter</a> |
+					<a target="_blank" href="https://d3js.org/">d3.js</a> |
+					<a target="_blank" href="http://leafletjs.com/">leaflet</a> |
+					<a target="_blank" href="https://github.com/mapbox/leaflet-omnivore">leaflet-omnivore</a> |
+					<a target="_blank" href="https://docs.angularjs.org/api">angular.js</a> |
+					<a target="_blank" href="http://momentjs.com/docs/">moment.js</a> |
 				</span>
 
 			</div>

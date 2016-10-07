@@ -129,7 +129,7 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 {
 	var windowWidth = $window.innerWidth;
 	var colWidth = windowWidth / 12;
-	var verticalStretch = 0.8;
+	var verticalStretch = 0.7;
 	var padding = 15 * 2;
 	var fgColor = FLAT_UI_COLORS.nephritis;  // FLAT_UI_COLORS.nephritis;
 	var defaultMargins = { top: 10, right: 10, bottom: 20, left: 25 };
@@ -157,6 +157,11 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 	$scope.selectMonth = function(m)
 	{
 		$scope.selected.month = m;
+	};
+
+	$scope.selectCpComercio = function(cp)
+	{
+		$scope.mapSelection.cpComercio = ($scope.mapSelection.cpComercio == cp)? null : cp;
 	};
 
 	/* init */

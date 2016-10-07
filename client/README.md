@@ -4,14 +4,18 @@ https://github.com/austinlyons/dcjs-leaflet-untappd
 
 # TODO
 
-- mapa
+- mapa                                          HECHO
+- storytelling                                  HECHO
+-   resaltar el grafico que se filtra
 - explicación lenguaje natural
-- storytelling
+
+- publicar
 
 - grafico horas
 - loading
 - iconos paneles
 - readme con fotos de los dibujos
+- mostrar los filtros activos
 
 
 - grunt jshint less                             HECHO
@@ -22,9 +26,7 @@ https://github.com/austinlyons/dcjs-leaflet-untappd
 - grafico de sectores
 - calendario
 
-- mostrar los filtros activos
 - lenguaje natural?
-
 
 
 - gasto promedio?
