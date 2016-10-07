@@ -96,7 +96,7 @@ module.directive('mainMap', function(FLAT_UI_COLORS)
                     var ccpp = cpLayer.feature.properties.COD_POSTAL;
                     var importe = _.find(importeAllCcpp, {key: ccpp});
                     importe = importe? importe.value : 0;
-                    cpLayer.setStyle({fillOpacity: importe/maxImporte});
+                    cpLayer.setStyle({fillOpacity: 0.1 + 0.9 * importe/maxImporte});
 
                     if( ccpp == scope.mapSelection.cpComercio )
                     {
@@ -120,6 +120,7 @@ module.directive('mainMap', function(FLAT_UI_COLORS)
                                 weight: weight,
                                 opacity: 0.6,
                                 color: FLAT_UI_COLORS.carrot,
+                                className: 'lineaCp'
                             });
                             line.addTo(_map);
                             _lines.push(line);
