@@ -149,6 +149,7 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 	$scope.mapColorBy = 'IMPORTE';
 	$scope.theStory = theStory;
 	$scope.maxSamples = $cookies.get('maxSamples') || 20000;
+	$scope.showDemographics = true;
 
 	/* funciones */
 	$scope.selectSector = function(s)
@@ -321,6 +322,12 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 						charts[chart].filter(filters.length === 0? null: [angular.copy(filters)]);
 				});
 				dc.redrawAll();
+			};
+
+			$scope.toggleDemographics = function()
+			{
+				$scope.showDemographics = !$scope.showDemographics;
+				$scope.$broadcast('show-demographics', $scope.showDemographics);
 			};
 
 			function updateMap(chart, filter)

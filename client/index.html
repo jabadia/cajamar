@@ -76,6 +76,10 @@
 						  ng-class="{'selected': mapSelection.cpComercio==cp }"
 						  ng-click="selectCpComercio(cp)"
 					>{{cp}}</span>
+
+					<span class="show-demographics pull-right"
+						  ng-class="{'selected': showDemographics}"
+						  ng-click="toggleDemographics()">INE</span>
 				</div>
 				<div class="calendar"><h5>calendario</h5></div>
 
@@ -167,8 +171,8 @@
 	</div>
 
 
-	<script src="bower_components/leaflet/dist/leaflet-src.js"></script>
-	<!--<script src="http://libs.cartocdn.com/cartodb.js/v3/cartodb.js"></script>-->
+	<!--<script src="bower_components/leaflet/dist/leaflet-src.js"></script>-->
+	<script src="http://libs.cartocdn.com/cartodb.js/v3/cartodb.js"></script>
 	<script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js'></script>
 	<script src="bower_components/moment/moment.js"></script>
 	<script src="bower_components/d3/d3.js"></script>

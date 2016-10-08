@@ -6,6 +6,7 @@ var module = angular.module('mapModule', []);
 module.directive('mainMap', function(FLAT_UI_COLORS)
 {
     var _map;
+    var _demographics;
     var _ccppLayers = [];
     var _lines = [];
 
@@ -25,10 +26,14 @@ module.directive('mainMap', function(FLAT_UI_COLORS)
             attribution: 'Mapbox <a href="http://mapbox.com/about/maps" target="_blank">Terms &amp; Feedback</a>'
         }).addTo(map);
 
-        // cartodb.createLayer(map,
-        //     'https://aliciapj.carto.com/api/v2/viz/a93a94c4-8bdb-11e6-99ff-0ecd1babdde5/viz.json'
-        // )
-        // .addTo(map);
+        cartodb.createLayer(map,
+            'https://aliciapj.carto.com/api/v2/viz/a93a94c4-8bdb-11e6-99ff-0ecd1babdde5/viz.json'
+        )
+        .addTo(map)
+        .done(function(layer)
+        {
+            _demographics = layer;
+        });
 
         var ccppCustomLayer = L.geoJson(null,
         {
@@ -133,6 +138,17 @@ module.directive('mainMap', function(FLAT_UI_COLORS)
                     }
                 });
             }
+
+            scope.$on('show-demographics', function(ev, show)
+            {
+                if(!_demographics)
+                    return;
+
+                if(show)
+                    _demographics.show();
+                else
+                    _demographics.hide();
+            });
 
             scope.$on('filters-changed', function()
             {
