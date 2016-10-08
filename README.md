@@ -9,6 +9,11 @@ Hemos enriquecido los datos proporcionados por la organización del hackathon co
  
 El dashboard muestra gráficos enlazados en los que se visualiza el importe total de gasto en función de las distintas dimensiones presentes en el dataset. Además cada gráfico permite filtrar los datos para profundizar en el análisis de forma exploratoria.
 
+## Utilidad Social
+Este proyecto es una prueba de concepto para una herramienta interactiva que permite:
+* a **los comerciantes de Almería** entender mejor su negocio: ¿de donde vienen mis clientes? ¿es el mismo patrón entre semana que en fin de semana? ¿y si llueve? ¿cuantos clientes espero atender la semana que viene?
+* a **las autoridades de Almería** comprender mejor los patrones de comportamiento y consumo de los habitantes de la provincia: ¿que implicaciones tendría permitir la apertura de Domingos? ¿hay zonas comerciales que están decayendo? ¿como planificar el transporte público? ¿se puede invertir en infraestructuras como aparcamientos?
+
 # Demo Online
 Se puede acceder al dashboard [AQUI](http://54.174.166.209:5001):
 
@@ -23,6 +28,17 @@ Se puede acceder al código fuente [AQUI](https://github.com/jabadia/cajamar)
 * `client` : html, css, js... con `bower` y `grunt` (para compilar los ficheros `less` y pasar `jshint`)
 * `server` : aplicación python/flask para servir el cliente y filtrar los datos: el servidor carga los datos al inicio en un dataframe de pandas y lo sirve en CSV cuando el cliente lo vaya pidiendo
 * `data`   : directorio donde copiar los ficheros de datos (no incluidos)
+
+## Innovación
+El proyecto combina un gran número de tecnologías punteras (python, flask, pandas, AngularJS, d3.js, crossfilter, leaflet) haciendo que todas ellas trabajen para conseguir una experiencia de usuario amena e interactiva.
+
+## storytelling
+
+Se ha añadido un componente de "storytelling" desarrollado expresamente para este hackathon.
+
+![storytelling](doc/storytelling.png)
+
+Este componente permite capturar el estado actual de la aplicación (filtros seleccionados) y crear una historia con distintos estados que se reproduce automáticamente, añadiendo una explicación sobre el mismo.
 
 ## Notas de implementación
 
