@@ -81,7 +81,7 @@
 				<div class="calendar"><h5>calendario</h5></div>
 
 				<div ng-show="currentStep.description" class="story-description">
-					<h5><i class="fa fa-lightbulb-o"></i> ¿Qué dicen los datos? <i class="fa fa-times pull-right" ng-click="currentStep=null"></i></h5>
+					<h5><i class="fa fa-lightbulb-o"></i> ¿Qué dicen los datos? <i class="fa fa-times pull-right" ng-click="stopStory()"></i></h5>
 					<div>
 						{{ currentStep.description }}
 					</div>
@@ -155,12 +155,13 @@
 					<a target="_blank" href="http://momentjs.com/docs/"><i class="devicon-javascript-plain"></i> moment.js</a>
 				</span>
 
+				<input class="pull-right" editable ng-model="maxSamples"></input>
 			</div>
 
 		</footer>
 
 		<div class="loading" ng-if="loading">
-			<h1>MACHACANDO DATOS</h1>
+			<h1><i class="fa fa-cog" aria-hidden="true"></i> MACHACANDO DATOS</h1>
 			<h3>un segundito, por favor</h3>
 		</div>
 
@@ -176,6 +177,7 @@
 	<script src="bower_components/dcjs/dc.js"></script>
 	<script src="bower_components/lodash/dist/lodash.js"></script>
 	<script src="bower_components/angular/angular.js"></script>
+	<script src="bower_components/angular-cookies/angular-cookies.js"></script>
 	<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
 	<script src="3rd_party/calendar-heatmap/src/calendar-heatmap.js"></script>
 	<script src="js/timeSector.js"></script>

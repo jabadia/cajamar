@@ -80,11 +80,11 @@ def query_csv():
     # aqui se pueden filtrar o procesar los datos antes de devolverlos
     sector = request.args.get('sector') or '*'
     month = request.args.get('month') or None
+    max_samples = int(request.args.get('maxSamples', 20000))
     result = data if sector == '*' else data[data['SECTOR']== sector]
     if month:
         result = result[result['MES']== int(month)]
 
-    max_samples = 50000
     if result.shape[0] > max_samples:
         result = result.sample(max_samples) # muestra aleatoria, para ir más rápido
     print result.shape

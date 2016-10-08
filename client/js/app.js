@@ -1,7 +1,7 @@
 (function(){
 "use strict";
 
-var app = angular.module('app', ['ui.bootstrap','mapModule','story']);
+var app = angular.module('app', ['ui.bootstrap','mapModule','story','ngCookies']);
 
 app.constant('FLAT_UI_COLORS', {
 	turquoise: '#1abc9c',
@@ -125,7 +125,7 @@ function slug(s)
 	return _.kebabCase(_.deburr(s));
 }
 
-app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPES, FLAT_UI_COLORS, $window, theStory, $timeout)
+app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPES, FLAT_UI_COLORS, $window, theStory, $timeout, $cookies)
 {
 	var windowWidth = $window.innerWidth;
 	var colWidth = windowWidth / 12;
@@ -148,6 +148,7 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 	};
 	$scope.mapColorBy = 'IMPORTE';
 	$scope.theStory = theStory;
+	$scope.maxSamples = $cookies.get('maxSamples') || 20000;
 
 	/* funciones */
 	$scope.selectSector = function(s)
@@ -164,6 +165,11 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 	{
 		$scope.mapSelection.cpComercio = ($scope.mapSelection.cpComercio == cp)? null : cp;
 	};
+
+	$scope.$watch('maxSamples', function()
+	{
+		$cookies.put('maxSamples', $scope.maxSamples);
+	});
 
 	/* init */
 	backendApi.getSectores().then(function(sectores)
@@ -185,6 +191,7 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 		var params = {
 			month: $scope.selected.month.index? $scope.selected.month.index : undefined,
 			sector: $scope.selected.sector.id == '*' ? '*' : $scope.selected.sector.name,
+			maxSamples: $scope.maxSamples
 		};
 		$scope.loading = true;
 		$q.all([backendApi.getWeather(), backendApi.getCardsData(params)]).then(function(results)
