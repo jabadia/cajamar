@@ -19,6 +19,8 @@
     "angular": "^1.5.8",
     "lodash": "^4.16.3",
     "dcjs": "2",
-    "angular-bootstrap": "^2.1.4"
+    "angular-bootstrap": "^2.1.4",
+    "bootstrap": "^3.3.7",
+    "moment": "momentjs#^2.15.1"
   }
 }
