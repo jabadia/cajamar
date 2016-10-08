@@ -84,7 +84,7 @@ def query_csv():
     if month:
         result = result[result['MES']== int(month)]
 
-    max_samples = 20000
+    max_samples = 50000
     if result.shape[0] > max_samples:
         result = result.sample(max_samples) # muestra aleatoria, para ir más rápido
     print result.shape

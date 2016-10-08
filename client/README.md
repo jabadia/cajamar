@@ -4,18 +4,22 @@ https://github.com/austinlyons/dcjs-leaflet-untappd
 
 # TODO
 
+- publicar
+- readme
+- datos del INE, carto?
+- grafico horas
+
 - mapa                                          HECHO
 - storytelling                                  HECHO
 -   resaltar el grafico que se filtra
-- explicación lenguaje natural
+- explicación lenguaje natural                  HECHO
 
 - publicar
 
-- grafico horas
-- loading
-- iconos paneles
+- loading                                       HECHO
+- iconos paneles                                no
 - readme con fotos de los dibujos
-- mostrar los filtros activos
+- mostrar los filtros activos                   HECHO
 
 
 - grunt jshint less                             HECHO
@@ -25,10 +29,3 @@ https://github.com/austinlyons/dcjs-leaflet-untappd
 
 - grafico de sectores
 - calendario
-
-- lenguaje natural?
-
-
-- gasto promedio?
-- horas -> sectores fijos, cambio de radio
-- bubbles del dia de la semana...
