@@ -52,7 +52,7 @@ La aplicación cliente es una SPA desarrollada en Angular.js usando principalmen
 
 dc.js utiliza crossfilter.js y d3.js para crear gráficas enlazadas a partir de datasets multidimensionales
 
-Además, incluimos un **mapa** usando la librería leaflet.js que carga los códigos postales en topoJson haciendo uso del plugin leaflet-omnivore
+Además, incluimos un **mapa** usando la librería leaflet.js que carga los códigos postales en topoJson haciendo uso del plugin leaflet-omnivore. Las capas sociodemográficas del INE están alojadas en carto.com y se incluyen usando la API de carto.
 
 Finalmente hemos incluido un componente de **storytelling** que permite capturar y presentar distintos estados del dashboard de forma secuencial automáticamente
 
