@@ -1,7 +1,7 @@
 # ¿Qué es esto?
 Proyecto realizado para el Hackathon organizado por Cajamar con motivo de la PyConEs 2016 en Almería, en Octubre de 2016.
 
-![boceto de la aplicación](doc/sketch1.jpg)
+![boceto de la aplicación](doc/sketch1.JPG)
 
 Hemos desarrollado un dashboard interactivo para analizar los datos proporcionados por Cajamar, corresponientes a las transacciones con tarjeta de crédito realizadas en los comercios de Almería capital durante 2015.
 
