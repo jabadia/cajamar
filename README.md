@@ -61,7 +61,9 @@ Además de los datos proporcionados por la organización, aportamos varias fuent
 
 * **meteorología**, descargada offline usando la API de Dark Sky, nos da las condiciones meteorológicas de Almería para cada día de 2015.
 * **códigos postales**, descargados del IGN / CartoCiudad en formato ESRI Shapefile y convertidos a topoJson para cargarlos en el mapa
-* **datos sociodemográficos**, descargados de ...(Alicia)
+* **datos sociodemográficos**, descargados de la [Junta de Andalucía](http://www.juntadeandalucia.es/institutodeestadisticaycartografia/DERA/g07.htm) en formato ESRI Shapefile. En concreto se ha usado la rejilla demográfica, que contiene datos de población absoluta y segmentación por edades, nacionalidad y afiliación a la Seguridad Social. Esta información está organizada en cuadrículas y sólo se encuentran en los núcleos de población, por lo que para poder utilizarla se han realizado las siguientes operaciones: 
+	* Unión espacial con la capa de códigos postales del IGN / Cartociudad por intersección, realizando una agregación de suma en los campos demográficos
+	* Cálculo del porcentaje de los campos demográficos en función del total de población
 
 ## Instalación
 
