@@ -78,8 +78,20 @@
 					>{{cp}}</span>
 
 					<span class="show-demographics pull-right"
-						  ng-class="{'selected': showDemographics}"
-						  ng-click="toggleDemographics()">INE</span>
+						  ng-class="{'selected': !showDemographics}"
+						  ng-click="toggleDemographics(false)">
+						Consumo
+					</span>
+					<span class="show-demographics pull-right"
+						  ng-class="{'selected': showDemographics=='edad'}"
+						  ng-click="toggleDemographics('edad')">
+						Pob/Edad (INE)
+					</span>
+					<span class="show-demographics pull-right"
+						  ng-class="{'selected': showDemographics=='origen'}"
+						  ng-click="toggleDemographics('origen')">
+						Pob/Origen (INE)
+					</span>
 				</div>
 				<div class="calendar"><h5>calendario</h5></div>
 

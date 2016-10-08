@@ -9,6 +9,7 @@ module.directive('mainMap', function(FLAT_UI_COLORS)
     var _demographics;
     var _ccppLayers = [];
     var _lines = [];
+    var _ccpp;
 
     function _createMap(elem, events)
     {
@@ -25,15 +26,6 @@ module.directive('mainMap', function(FLAT_UI_COLORS)
         L.tileLayer('https://dnv9my2eseobd.cloudfront.net/v3/cartodb.map-4xtxp73f/{z}/{x}/{y}.png', {
             attribution: 'Mapbox <a href="http://mapbox.com/about/maps" target="_blank">Terms &amp; Feedback</a>'
         }).addTo(map);
-
-        cartodb.createLayer(map,
-            'https://aliciapj.carto.com/api/v2/viz/a93a94c4-8bdb-11e6-99ff-0ecd1babdde5/viz.json'
-        )
-        .addTo(map)
-        .done(function(layer)
-        {
-            _demographics = layer;
-        });
 
         var ccppCustomLayer = L.geoJson(null,
         {
@@ -57,7 +49,21 @@ module.directive('mainMap', function(FLAT_UI_COLORS)
             },
         });
         var ccpp = omnivore.topojson('./map/almeria_20.json', null, ccppCustomLayer);
-        ccpp.addTo(map);
+        _ccpp = ccpp;
+
+        cartodb.createLayer(map,
+            // 'https://aliciapj.carto.com/api/v2/viz/a93a94c4-8bdb-11e6-99ff-0ecd1babdde5/viz.json'
+            'https://aliciapj.carto.com/api/v2/viz/a93a94c4-8bdb-11e6-99ff-0ecd1babdde5/viz.json',
+            {legends:false}
+        )
+        .addTo(map)
+        .done(function(layer)
+        {
+            _demographics = layer;
+            _demographics.getSubLayer(0).hide();
+            _demographics.getSubLayer(1).show();
+        });
+
     }
 
     return {
@@ -145,9 +151,25 @@ module.directive('mainMap', function(FLAT_UI_COLORS)
                     return;
 
                 if(show)
+                {
                     _demographics.show();
+                    if( show == 'origen' )
+                    {
+                        _demographics.getSubLayer(0).show();
+                        _demographics.getSubLayer(1).hide();
+                    }
+                    else if( show == 'edad' )
+                    {
+                        _demographics.getSubLayer(0).hide();
+                        _demographics.getSubLayer(1).show();
+                    }
+                    _map.removeLayer(_ccpp);
+                }
                 else
+                {
                     _demographics.hide();
+                    _ccpp.addTo(_map);
+                }
             });
 
             scope.$on('filters-changed', function()

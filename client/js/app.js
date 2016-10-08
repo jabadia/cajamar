@@ -149,7 +149,7 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 	$scope.mapColorBy = 'IMPORTE';
 	$scope.theStory = theStory;
 	$scope.maxSamples = $cookies.get('maxSamples') || 20000;
-	$scope.showDemographics = true;
+	$scope.showDemographics = 'edad';
 
 	/* funciones */
 	$scope.selectSector = function(s)
@@ -324,9 +324,12 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 				dc.redrawAll();
 			};
 
-			$scope.toggleDemographics = function()
+			$scope.toggleDemographics = function(which)
 			{
-				$scope.showDemographics = !$scope.showDemographics;
+				if($scope.showDemographics==which)
+					$scope.showDemographics = null;
+				else
+					$scope.showDemographics = which;
 				$scope.$broadcast('show-demographics', $scope.showDemographics);
 			};
 
