@@ -69,7 +69,27 @@ div.weather-chart {
     }
 }
 
-div.story-description,
+div.story-description {
+    position: absolute;
+    z-index: 1000;
+    right: 75px;
+    top: 75px;
+    background-color: @clouds;
+    color: @wetasphalt;
+    padding: 10px;
+    width: 400px;
+
+    font-size: 18px;
+
+    h5 {
+        color: @wisteria;
+        font-weight: bold;
+        font-size: 24px;
+        padding: 0;
+        margin: 5px;
+    }
+}
+
 div.current-filters {
 
     background-color: @wetasphalt;   // like dc-chart in dc-themed.less
@@ -137,6 +157,19 @@ h5 {
             background: @clouds;
         }
     }
+}
+
+div.loading {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    z-index: 5000;
+    background: @bg-color;
+    font-size: 40px;
+    text-align: center;
+    padding-top: 45vh;
 }
 
 footer {

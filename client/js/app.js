@@ -530,8 +530,14 @@ app.controller('MainCtrl', function($scope, backendApi, $q, MONTHS, WEATHER_TYPE
 
 			//http://bl.ocks.org/eesur/5fbda7f410d31da35e42  calendar
 			//http://angularscript.com/angular-directive-for-d3-js-calendar-heatmap/
+
+			// autoplay
+			$scope.playStory();
+
 		});
+
 	}, true);
+
 });
 
 }());

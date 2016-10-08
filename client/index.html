@@ -69,12 +69,6 @@
 						<a href="#" ng-click="resetFilters()"><i class="fa fa-times"></i> quitar filtros</a>
 					</div>
 				</div>
-				<div ng-show="currentStep.description" class="story-description">
-					<h5>¿Qué dicen los datos?</h5>
-					<div>
-						{{ currentStep.description }}
-					</div>
-				</div>
 			</section>
 			<section class="col-xs-9">
 				<div class="main-map" main-map color-by='mapColorBy' data-by-cp="dataByCp" map-selection='mapSelection'></div>
@@ -85,6 +79,14 @@
 					>{{cp}}</span>
 				</div>
 				<div class="calendar"><h5>calendario</h5></div>
+
+				<div ng-show="currentStep.description" class="story-description">
+					<h5><i class="fa fa-lightbulb-o"></i> ¿Qué dicen los datos? <i class="fa fa-times pull-right" ng-click="currentStep=null"></i></h5>
+					<div>
+						{{ currentStep.description }}
+					</div>
+				</div>
+
 			</section>
 		</main>
 
@@ -157,13 +159,16 @@
 
 		</footer>
 
-		<div ng-if="loading">CARGANDO</div>
+		<div class="loading" ng-if="loading">
+			<h1>MACHACANDO DATOS</h1>
+			<h3>un segundito, por favor</h3>
+		</div>
 
 	</div>
 
 
-	<!--<script src="http://libs.cartocdn.com/cartodb.js/v3/cartodb.js"></script>-->
 	<script src="bower_components/leaflet/dist/leaflet-src.js"></script>
+	<!--<script src="http://libs.cartocdn.com/cartodb.js/v3/cartodb.js"></script>-->
 	<script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js'></script>
 	<script src="bower_components/moment/moment.js"></script>
 	<script src="bower_components/d3/d3.js"></script>

@@ -25,6 +25,11 @@ module.directive('mainMap', function(FLAT_UI_COLORS)
             attribution: 'Mapbox <a href="http://mapbox.com/about/maps" target="_blank">Terms &amp; Feedback</a>'
         }).addTo(map);
 
+        // cartodb.createLayer(map,
+        //     'https://aliciapj.carto.com/api/v2/viz/a93a94c4-8bdb-11e6-99ff-0ecd1babdde5/viz.json'
+        // )
+        // .addTo(map);
+
         var ccppCustomLayer = L.geoJson(null,
         {
             style: function(feature)
